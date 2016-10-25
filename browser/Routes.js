@@ -10,8 +10,8 @@ export default class Routes extends Component {
   render() {
     return (
       <Router history={browserHistory}>
-        <Route path="/" component={App}>
-          <Route path="/stations" component={Stations} onEnter={onStationsEnter}/>
+        <Route path="/" component={App} onEnter={onStationsEnter}>
+          <Route path="/stations" component={Stations}/>
         </Route>
       </Router>
       );
