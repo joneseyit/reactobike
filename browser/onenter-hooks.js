@@ -2,4 +2,4 @@
 import store from './store';
 import { fetchAndReceiveStations } from './redux/stations';
 
-export const onStationsEnter = () => store.dispatch(fetchAndReceiveStations());
+export const onAppEnter = () => store.dispatch(fetchAndReceiveStations());

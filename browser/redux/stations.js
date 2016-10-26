@@ -1,7 +1,7 @@
 'use strict';
 
 import Promise from 'bluebird';
-import fetchCors from '../cors';
+import axios from 'axios';
 import { convertStations } from '../converters';
 import { STATION_INFORMATION_URL, STATION_STATUS_URL } from '../citibikeAPI';
 
@@ -32,15 +32,17 @@ export const receiveStations = stations => ({
 
 /*----------  THUNKS  ----------*/
 export const fetchAndReceiveStations = () => dispatch => {
-  const infoPromise = fetchCors(STATION_INFORMATION_URL);
-  const statusPromise = fetchCors(STATION_STATUS_URL);
+  const infoPromise = axios.get(STATION_INFORMATION_URL)
+  const statusPromise = axios.get(STATION_STATUS_URL)
 
   Promise.all([infoPromise, statusPromise]).spread((infoResponse, statusResponse) => {
-    const infoDetails = infoResponse.data.stations;
-    const statusDetails = statusResponse.data.stations;
+    const infoDetails = infoResponse.data.data.stations;
+    const statusDetails = statusResponse.data.data.stations;
     const convertedStations = convertStations(infoDetails, statusDetails);
     dispatch(receiveStations(convertedStations));
   });
+
+
 };
 
 /*----------  REDUCER  ----------*/
