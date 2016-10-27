@@ -4,7 +4,7 @@ export default class Stations extends Component {
   render() {
     let { stations } = this.props;
     return (
-      <div>
+      <div className="container">
         <h3>Station Info</h3>
         <table className="table">
           <thead>

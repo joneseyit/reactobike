@@ -8,6 +8,7 @@ export const convertStations = (infoDetails, statusDetails) => {
     let status = statusDetails.find(compareStatus => info.station_id === compareStatus.station_id);
     let id = parseInt(info.station_id, 10);
     let { name, lat, lon, capacity } = info;
+    let position = { lat: lat, lng: lon };
     let availableBikes = status.num_bikes_available,
         availableDocks = status.num_docks_available,
         isInstalled = Boolean(status.is_installed),
@@ -17,6 +18,7 @@ export const convertStations = (infoDetails, statusDetails) => {
     return {
       id,
       name,
+      position,
       lat,
       lon,
       capacity,

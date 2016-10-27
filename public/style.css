@@ -1,0 +1,14 @@
+/* NAV */
+#nav {
+  margin-bottom: 0;
+}
+
+#map-mode-toggle-btn {
+  padding: 0px 15px;
+}
+
+/* MAP */
+/* Info Box */
+.info-box ul {
+  list-style: none;
+}
