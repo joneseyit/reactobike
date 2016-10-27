@@ -1,29 +1,17 @@
 import React, { Component } from 'react';
 import { Marker } from 'google-maps-react';
+import { evaluateColor } from './config';
 
 export default class MarkerWrapper extends Component {
-  constructor(props) {
-    super(props);
-    // this.updateIcon = this.updateIcon.bind(this);
-  }
-
-
-
-  componentDidMount() {
-
-  }
-
   getColor() {
     let { mapMode, availableBikes, availableDocks } = this.props;
-    let colorCounter = mapMode.mode === 'docks' ? availableDocks : availableBikes;
-    return colorCounter <= 1 ? 'red' :
-                colorCounter <= 7  ? 'yellow' : 'green';
+    let counter = mapMode.mode === 'docks' ? availableDocks : availableBikes;
+    return evaluateColor(counter);
   }
 
   getIcon() {
     return Object.assign({}, this.props.mapMode.icon, {fillColor: this.getColor()});
   }
-
 
   componentDidUpdate(prevProps) {
     if (this.props.mapMode.mode !== prevProps.mapMode.mode) {
@@ -32,8 +20,9 @@ export default class MarkerWrapper extends Component {
   }
 
   render() {
+     let props = Object.assign({}, this.props, {icon: this.getIcon()});
     return (
-      <Marker ref="marker" {...this.props} />
+      <Marker ref="marker" {...props} />
     );
   }
 }

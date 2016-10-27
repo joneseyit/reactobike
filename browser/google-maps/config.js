@@ -44,6 +44,26 @@ export const dockIcon = {
   fillOpacity: 1,
 };
 
+const colors = {
+  empty: 'red',
+  low: 'yellow',
+  full: 'green',
+  unavailable: 'grey'
+};
+
+/*----------  FUNCTIONS  ----------*/
+export const evaluateColor = counter => {
+  switch (true) {
+    case typeof counter !== 'number':
+    case counter < 0:
+      return colors.unavailable;
+    case counter <= 1: return colors.empty;
+    case counter <= 7: return colors.low;
+    case counter > 7: return colors.full;
+    default: return colors.unavailable;
+  }
+};
+
 
 /*
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Map as GoogleMap, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
 import { API_KEY, mapProps, mapStyle, containerStyle} from '../../google-maps/config';
-import MarkerWrapper from '../../google-maps/MarkerWrapper';
-let Marker = MarkerWrapper;
+import Marker from '../../google-maps/MarkerWrapper';
+
 class StationMap extends Component {
   constructor (props) {
     super(props);
@@ -15,7 +15,6 @@ class StationMap extends Component {
     this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.setState = this.setState.bind(this);
-    this.setIcon = this.setIcon.bind(this);
   }
 
   onMarkerClick(props, marker, e) {
@@ -42,13 +41,6 @@ class StationMap extends Component {
     }
   }
 
-  setIcon(fillColor) {
-    let { mapMode, google } = this.props;
-    let path = mapMode.mode === 'docks' ? google.maps.SymbolPath.FORWARD_CLOSED_ARROW : google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
-    // return Object.assign({}, mapMode.icon, {path}, {fillColor});
-    return Object.assign({}, mapMode.icon, {fillColor});
-  }
-
   render() {
     const { loaded, google, stations, mapMode } = this.props;
     const { selectedPlace } = this.state;
@@ -65,16 +57,10 @@ class StationMap extends Component {
           onClick={this.onMapClick}
           {...mapProps}>
           {stations.map((station, i) => {
-            let { availableBikes, availableDocks } = station;
-            let colorCounter = mapMode.mode === 'docks' ? availableDocks : availableBikes;
-            let color = colorCounter <= 1 ? 'red' :
-                        colorCounter <= 7  ? 'yellow' : 'green';
-            let icon = this.setIcon(color);
             return (
             <Marker
               {...station}
               mapMode={mapMode}
-              icon={icon}
               onClick={this.onMarkerClick}
               key={i}/>
             );
