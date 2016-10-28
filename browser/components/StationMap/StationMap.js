@@ -37,7 +37,7 @@ class StationMap extends Component {
       this.setState({
         showingInfoWindow: false,
         activeMarker: null
-      })
+      });
     }
   }
 
@@ -50,7 +50,7 @@ class StationMap extends Component {
         );
     } else {
       return (
-        <GoogleMap google={google}
+        <GoogleMap ref="google" google={google}
           className="map"
           style={mapStyle}
           containerStyle={containerStyle}
