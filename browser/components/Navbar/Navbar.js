@@ -24,7 +24,7 @@ export default class Navbar extends Component {
   }
 
   render() {
-    let { mapMode, toggleMapMode, location } = this.props;
+    let { mapMode, toggleMapMode, setMapMode, location } = this.props;
     return (
       <nav className="navbar navbar-inverse navbar-static-top" id="nav">
         <div className="container-fluid">
@@ -40,7 +40,8 @@ export default class Navbar extends Component {
               location === '/map' && (
                 <div className="pull-right">
                   <div id="map-mode-toggle-btn">
-                    <button type="submit" className="btn btn-default navbar-btn" onClick={toggleMapMode}>Show {mapMode.mode === 'bikes' ? 'Docks' : 'Bikes'}</button>
+                    <button type="submit" className="btn btn-default navbar-btn" onClick={()=>setMapMode('bikes')} disabled={mapMode.mode === 'bikes'}>Bikes</button>
+                    <button type="submit" className="btn btn-default navbar-btn" onClick={()=>setMapMode('docks')} disabled={mapMode.mode === 'docks'}>Docks</button>
                   </div>
                 </div>
               )
