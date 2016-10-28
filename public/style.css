@@ -7,6 +7,17 @@
   padding: 0px 15px;
 }
 
+#nav-header-block {
+  display: inline-block;
+}
+
+#autocomplete-input {
+  width: 20em;
+}
+
+#navbar-or {
+  margin-right: 0;
+}
 /* MAP */
 /* Info Box */
 .info-box ul {

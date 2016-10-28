@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Marker } from 'google-maps-react';
-import { evaluateColor, evaluatePath, evaluateScale, mapProps } from './config';
+import { evaluateColor, evaluatePath, evaluateScale, mapProps } from '../../google-maps/config';
 
-export default class MarkerWrapper extends Component {
+export default class StationMarker extends Component {
   getColor() {
     let { mapMode, availableBikes, availableDocks } = this.props;
     let counter = mapMode.mode === 'docks' ? availableDocks : availableBikes;
@@ -31,8 +31,7 @@ export default class MarkerWrapper extends Component {
     let { mapMode, map } = this.props;
     let { marker } = this.refs;
     let zoom = map ? map.zoom : mapProps.zoom;
-    if (mapMode.mode !== prevProps.mapMode.mode
-        || prevProps.map && prevProps.map.zoom !== map.zoom) {
+    if (mapMode.mode !== prevProps.mapMode.mode) {
       marker.marker.setIcon(this.getIcon());
     }
   }

@@ -2,9 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import StationMap from './StationMap';
 
-const mapStateToProps = ({ stations, mapMode }) => ({
+const mapStateToProps = ({ stations, mapMode, autocomplete }) => ({
   stations,
-  mapMode
+  mapMode,
+  autocomplete
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 import Navbar from './Navbar';
 import { toggleMapMode } from '../../redux/mapMode';
-import { updateAutocomplete } from '../../redux/autocomplete';
+import { setAutoComplete, clearAutoComplete } from '../../redux/autocomplete';
 
-const mapStateToProps = ({ mapMode, autocomplete }) => ({ mapMode, autocomplete });
+const mapStateToProps = ({ mapMode }) => ({ mapMode });
 const mapDispatchToProps = dispatch => ({
   toggleMapMode: () => dispatch(toggleMapMode()),
-  updateAutocomplete: value => dispatch(updateAutocomplete(value))
+  setAutoComplete: node => dispatch(setAutoComplete(node)),
+  clearAutoComplete: node => dispatch(clearAutoComplete(node))
 });
 
 export default connect(

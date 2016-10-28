@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
-import {Map as GoogleMap, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
+import ReactDOM from 'react-dom';
+import {Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import { API_KEY, mapProps, mapStyle, containerStyle} from '../../google-maps/config';
-import Marker from '../../google-maps/MarkerWrapper';
+import StationMarker from './StationMarker';
 
-class StationMap extends Component {
+class StationMapContents extends Component {
   constructor (props) {
     super(props);
     this.state = {
       showingInfoWindow: false,
       activeMarker: {},
-      selectedPlace: {}
+      selectedPlace: {},
+      autocompleteInitiated: false,
+      place: null,
+      position: null,
+      places: []
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
+    this.onPlaceClick = this.onPlaceClick.bind(this);
     this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.setState = this.setState.bind(this);
@@ -23,6 +29,10 @@ class StationMap extends Component {
       activeMarker: marker,
       showingInfoWindow: true
     });
+  }
+
+  onPlaceClick(props, marker, e) {
+    console.log('placeClick');
   }
 
   onInfoWindowClose() {
@@ -41,30 +51,83 @@ class StationMap extends Component {
     }
   }
 
+renderAutoComplete() {
+    const {google, map} = this.props;
+    if (!google || !map) return;
+
+    const aref = this.props.autocomplete;
+    const node = ReactDOM.findDOMNode(aref);
+    var autocomplete = new google.maps.places.Autocomplete(node);
+    autocomplete.bindTo('bounds', map);
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (!place.geometry) {
+        return;
+      }
+
+      if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);
+      }
+
+      this.setState({ places: [
+          ...this.state.places,
+          {
+            place: place,
+            position: place.geometry.location
+          }
+        ]
+      });
+    });
+  }
+
+componentDidMount() {
+  if(this.props.autocomplete) {
+    this.renderAutoComplete();
+    this.setState({autocompleteInitiated: true});
+  }
+}
+
+componentDidUpdate(prevProps) {
+  const { map } = this.props;
+  if (map !== prevProps.map || !this.state.autocompleteInitiated) {
+    this.renderAutoComplete();
+    this.setState({autocompleteInitiated: true});
+  }
+}
+
   render() {
     const { loaded, google, stations, mapMode } = this.props;
-    const { selectedPlace } = this.state;
+    const { selectedPlace, places } = this.state;
     if (!loaded) {
       return (
           <div>Loading...</div>
         );
     } else {
       return (
-        <GoogleMap ref="google" google={google}
+        <Map ref="google" google={google}
           className="map"
           style={mapStyle}
           containerStyle={containerStyle}
           onClick={this.onMapClick}
-          {...mapProps}>
+          {...mapProps}
+          center={this.state.position || mapProps.center}>
           {stations.map((station, i) => {
             return (
-            <Marker
+            <StationMarker
               {...station}
               mapMode={mapMode}
               onClick={this.onMarkerClick}
               key={i}/>
             );
           })}
+        { places.map((place, idx) =>
+          <Marker key={idx} onClick={this.onPlaceClick} position={place.position} />
+          )
+        }
             <InfoWindow
               marker={this.state.activeMarker}
               visible={this.state.showingInfoWindow}
@@ -77,11 +140,30 @@ class StationMap extends Component {
                   </ul>
                 </div>
             </InfoWindow>
-        </GoogleMap>
+        </Map>
       );
     }
   }
 }
+
+class StationMapWrapper extends Component {
+  render() {
+    const props = this.props;
+    const {google} = this.props;
+
+    return (
+      <Map google={google}
+          className={'map'}
+          style={mapStyle}
+          containerStyle={containerStyle}
+          visible={false}
+          >
+            <StationMapContents {...props} />
+      </Map>
+    );
+  }
+}
+
 
 Marker.propTypes = {
   icon: React.PropTypes.object
@@ -90,4 +172,4 @@ Marker.propTypes = {
 export default GoogleApiWrapper({
   apiKey: API_KEY,
   containerStyle: {height: '100%', width: '100%'}
-})(StationMap);
+})(StationMapWrapper);

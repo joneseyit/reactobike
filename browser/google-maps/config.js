@@ -1,3 +1,5 @@
+import * as styles from './styles';
+
 export const API_KEY = 'AIzaSyAxlHPHrZBPgk8Vho3gc6RylhUDY1Zp1jU';
 
 export const style = {
@@ -7,19 +9,20 @@ export const style = {
 
 // Uncomment prop to set value
 export const mapProps = {
-  zoom: 20,
+  zoom: 17,
   initialCenter: {lat: 40.705007, lng: -74.00914},
   mapTypeControl: true,
   scaleControl: true,
   streetViewControl: true,
   scrollwheel: true,
-  centeraroundcurrentlocation: false
+  centeraroundcurrentlocation: false,
+  styles: styles.mutedBlue
 };
 
 export const mapStyle = {
-  width: '100%',
-  height: '100%',
-  position: 'relative'
+  width: '99%',
+  height: '99%',
+  // position: 'relative'
 };
 
 export const containerStyle = {
@@ -30,14 +33,14 @@ export const containerStyle = {
 
 /*----------  ICONS  ----------*/
 export const bikeIcon = {
-  scale: .5,
+  scale: 0.5,
   strokeColor: 'black',
   strokeWeight: 0.5,
   fillOpacity: 1,
 };
 
 export const dockIcon = {
-  scale: .5,
+  scale: 0.5,
   strokeColor: 'black',
   strokeWeight: 0.5,
   fillOpacity: 1,
@@ -53,10 +56,10 @@ const fullMoon = 'M25,45a20,20 0 1,0 40,0a20,20 0 1,0 -40,0';
 
 /*----------  FUNCTIONS  ----------*/
 const colors = {
-  empty: 'red',
-  low: 'yellow',
-  full: 'green',
-  unavailable: 'grey'
+  empty: '#F44336',
+  low: '#FFEB3B',
+  full: '#4CAF50',
+  unavailable: '#9E9E9E'
 };
 
 const paths = {
@@ -84,8 +87,8 @@ export const evaluatePath = ratio => {
     case typeof ratio !== 'number':
     case ratio <= 0:
       return paths.empty;
-    case ratio <= 0.33: return paths.low;
-    case ratio <= 0.67: return paths.half;
+    case ratio <= 0.25: return paths.low;
+    case ratio <= 0.75: return paths.half;
     case ratio < 1: return paths.most;
     case ratio >= 1: return paths.full;
     default: return paths.empty;
