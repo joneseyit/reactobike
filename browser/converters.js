@@ -1,32 +1,36 @@
-const hasStatus = (info, statusDetails) => (
- Boolean(statusDetails.find(status => info.station_id === status.station_id && status.is_installed))
-  );
-
-export const convertStations = (infoDetails, statusDetails) => {
-  return infoDetails.filter(info => hasStatus(info, statusDetails))
-    .map(info => {
-    let status = statusDetails.find(compareStatus => info.station_id === compareStatus.station_id);
-    let id = parseInt(info.station_id, 10);
-    let { name, lat, lon, capacity } = info;
-    let position = { lat: lat, lng: lon };
-    let availableBikes = status.num_bikes_available,
-        availableDocks = status.num_docks_available,
-        isInstalled = Boolean(status.is_installed),
-        isRenting = Boolean(status.is_renting),
-        isReturning = Boolean(status.is_returning);
-
-    return {
-      id,
-      name,
-      position,
-      lat,
-      lon,
-      capacity,
-      availableBikes,
-      availableDocks,
-      isInstalled,
-      isRenting,
-      isReturning
-    };
+export const convertStationInfo = station => ({
+    id: parseInt(station.station_id, 10),
+    name: station.name,
+    position: { lat: station.lat, lng: station.lon },
+    capacity: station.capacity
   });
-};
+
+export const convertStationStatus = station => ({
+    id: parseInt(station.station_id, 10),
+    availableBikes: station.num_bikes_available,
+    availableDocks: station.num_docks_available,
+    disabledBikes: station.num_bikes_disabled,
+    disabledDocks: station.num_docks_disabled,
+    isInstalled: Boolean(station.is_installed),
+    isRenting: Boolean(station.is_renting),
+    isReturning: Boolean(station.is_returning)
+  });
+
+export const joinStationData = (station, stationStatus) => {
+  let status = stationStatus.find(status => station.id === status.id) ||
+    {
+      availableBikes: null,
+      availableDocks: null,
+      disabledBikes: null,
+      disabledDocks: null,
+      isInstalled: null,
+      isRenting: null,
+      isReturning: null
+    };
+  return Object.assign({}, station, status);
+}
+
+export const cropCoordinates = coordinates => ({
+  lat: Math.round(coordinates.lat * 100000) / 100000,
+  lng: Math.round(coordinates.lng * 100000) / 100000
+});

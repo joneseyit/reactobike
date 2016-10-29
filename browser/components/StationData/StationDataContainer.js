@@ -2,10 +2,14 @@
 
 import { connect } from 'react-redux';
 import StationData from './StationData';
-import { receiveStations } from '../../redux/stations';
+import { joinStationData } from '../../converters';
 
 
-const mapStateToProps = ({ stations }) => ({ stations });
+const mapStateToProps = ({ stationInfo, stationStatus }) => {
+  let stations = stationInfo.map(station => joinStationData(station, stationStatus));
+  return { stations };
+};
+
 const mapDispatchToProps = dispatch => ({
 
 });

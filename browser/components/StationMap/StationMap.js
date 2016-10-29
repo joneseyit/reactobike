@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
-import { API_KEY, mapProps, mapStyle, containerStyle} from '../../google-maps/config';
-import StationMarker from './StationMarker';
+import { GAPI_KEY } from '../../config';
+import { stationMapProps, stationMapStyle, stationMapContainerStyle} from '../../google-maps/maps';
+import StationMarker from './StationMarkerContainer';
 
 class StationMapContents extends Component {
   constructor (props) {
@@ -14,7 +15,6 @@ class StationMapContents extends Component {
       autocompleteInitiated: false,
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
-    this.onPlaceClick = this.onPlaceClick.bind(this);
     this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.setState = this.setState.bind(this);
@@ -26,10 +26,6 @@ class StationMapContents extends Component {
       activeMarker: marker,
       showingInfoWindow: true
     });
-  }
-
-  onPlaceClick(props, marker, e) {
-    console.log('placeClick');
   }
 
   onInfoWindowClose() {
@@ -49,8 +45,9 @@ class StationMapContents extends Component {
   }
 
 renderAutoComplete() {
-    const {google} = this.props;
-    const map = this.refs.google && this.refs.google.map;
+    const { google } = this.props;
+    const map = this.refs['station-map'] && this.refs['station-map'].map;
+
     if (!google || !map) return;
 
     const aref = this.props.autocomplete;
@@ -64,16 +61,18 @@ renderAutoComplete() {
         return;
       }
 
+      this.props.addPlace({
+        place: place,
+        position: place.geometry.location
+      });
+
       if (place.geometry.viewport) {
         map.fitBounds(place.geometry.viewport);
       } else {
         map.setCenter(place.geometry.location);
         map.setZoom(17);
       }
-      this.props.addPlace({
-        place: place,
-        position: place.geometry.location
-      });
+
       // let bounds = new google.maps.LatLngBounds();
       // this.props.places.forEach(place =>bounds.extend(place.position))
       // map.fitBounds((bounds));
@@ -81,11 +80,11 @@ renderAutoComplete() {
   }
 
 componentDidMount() {
-  if(this.props.autocomplete) {
+  this.props.updateStationStatus();
+  if (this.props.autocomplete) {
     this.renderAutoComplete();
     this.setState({autocompleteInitiated: true});
   }
-  this.props.updateStationFeed();
 }
 
 componentDidUpdate(prevProps) {
@@ -97,8 +96,7 @@ componentDidUpdate(prevProps) {
 }
 
   render() {
-    console.log('rendering map');
-    const { loaded, google, stations, mapMode, places } = this.props;
+    const { loaded, google, mapMode, stations, places } = this.props;
     const { selectedPlace } = this.state;
     if (!loaded) {
       return (
@@ -106,51 +104,55 @@ componentDidUpdate(prevProps) {
         );
     } else {
       return (
-        <Map ref="google" google={google}
+        <Map ref="station-map" google={google}
           className="map"
-          style={mapStyle}
-          containerStyle={containerStyle}
+          style={stationMapStyle}
+          containerStyle={stationMapContainerStyle}
           onClick={this.onMapClick}
-          {...mapProps}
-          center={this.state.position || mapProps.center}>
-          {stations.map((station, i) => {
+          {...stationMapProps}
+          center={this.state.position || stationMapProps.center}>
+
+          { stations.map(stationId => {
             return (
             <StationMarker
-              stations={stations}
-              {...station}
+              id={stationId}
               mapMode={mapMode}
               onClick={this.onMarkerClick}
-              key={i}/>
+              key={stationId}/>
             );
           })}
-        { places.map((place, idx) =>
-          <Marker key={idx} onClick={this.onPlaceClick} position={place.position} />
-          )
-        }
-            <InfoWindow
-              marker={this.state.activeMarker}
-              visible={this.state.showingInfoWindow}
-              onClose={() => this.onInfoWindowClose()}>
-                <div className="info-box">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>{selectedPlace.name}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Available Bikes:</td>
-                        <td>{selectedPlace.availableBikes}</td>
-                      </tr>
-                      <tr>
-                        <td>Available Docks:</td>
-                        <td>{selectedPlace.availableDocks}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-            </InfoWindow>
+
+          { places.map((place, idx) =>
+            <Marker key={idx}
+                    position={place.position} />
+            )
+          }
+
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+            onClose={() => this.onInfoWindowClose()}>
+              <div className="info-box">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>{selectedPlace.name}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Available Bikes:</td>
+                      <td>{selectedPlace.availableBikes}</td>
+                    </tr>
+                    <tr>
+                      <td>Available Docks:</td>
+                      <td>{selectedPlace.availableDocks}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </InfoWindow>
+
         </Map>
       );
     }
@@ -179,6 +181,6 @@ Marker.propTypes = {
 };
 
 export default GoogleApiWrapper({
-  apiKey: API_KEY,
+  apiKey: GAPI_KEY,
   containerStyle: {height: '100%', width: '100%'}
 })(StationMapWrapper);

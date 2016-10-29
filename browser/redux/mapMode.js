@@ -1,4 +1,4 @@
-import { bikeIcon, dockIcon } from '../google-maps/config';
+import { bikeIcon, dockIcon } from '../google-maps/icons';
 
 /*----------  MODES  ----------*/
 const bikeMode = {

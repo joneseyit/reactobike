@@ -1,20 +1,31 @@
 import { connect } from 'react-redux';
 import StationMap from './StationMap';
 import { loadCurrentLocation } from '../../redux/currentLocation';
-import { updateStationFeed } from '../../redux/stations';
-import { addPlace, removePlace } from '../../redux/places';
+import { updateStationStatus, loadStationStatus } from '../../redux/stationStatus';
+import { addPlace } from '../../redux/places';
 
-const mapStateToProps = ({ stations, mapMode, autocomplete, currentLocation, places }) => ({
-  stations,
-  mapMode,
-  autocomplete,
-  currentLocation,
-  places
-});
+const mapStateToProps = state => {
+    let { stationInfo,
+          mapMode,
+          autocomplete,
+          currentLocation,
+          places } = state;
+
+    let stations = stationInfo.map(station => station.id);
+
+    return {
+      stations,
+      mapMode,
+      autocomplete,
+      currentLocation,
+      places
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
   loadCurrentLocation: () => dispatch(loadCurrentLocation()),
-  updateStationFeed: () => dispatch(updateStationFeed()),
+  updateStationStatus: () => dispatch(updateStationStatus()),
+  loadStationStatus: () => dispatch(loadStationStatus()),
   addPlace: place => dispatch(addPlace(place))
 });
 

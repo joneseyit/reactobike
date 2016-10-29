@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { cropCoordinates } from '../../converters';
+
 
 export default class Stations extends Component {
   render() {
@@ -10,9 +12,9 @@ export default class Stations extends Component {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
-              <th>Latitude</th>
-              <th>Longitude</th>
+              <th>Location</th>
+              <th>Coordinates</th>
+              <th>Capacity</th>
               <th>Available Bikes</th>
               <th>Available Docks</th>
               <th>Renting</th>
@@ -20,18 +22,21 @@ export default class Stations extends Component {
             </tr>
           </thead>
           <tbody>
-            {stations.map((station, i) => (
-              <tr key={i}>
-                <td>{station.id}</td>
-                <td>{station.name}</td>
-                <td>{station.lat}</td>
-                <td>{station.lon}</td>
-                <td>{station.availableBikes}</td>
-                <td>{station.availableDocks}</td>
-                <td>{station.isRenting ? 'Yes' : ''} </td>
-                <td>{station.isReturning ? 'Yes' : ''}</td>
-              </tr>
-            ))}
+            {stations.map((station, i) => {
+              let location = cropCoordinates(station.position);
+              return (
+                <tr key={i}>
+                  <td>{station.id}</td>
+                  <td>{station.name}</td>
+                  <td>{`${location.lat}, ${location.lng}`}</td>
+                  <td>{station.capacity}</td>
+                  <td>{station.availableBikes}</td>
+                  <td>{station.availableDocks}</td>
+                  <td>{station.isRenting ? 'Yes' : ''} </td>
+                  <td>{station.isReturning ? 'Yes' : ''}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
