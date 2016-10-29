@@ -9,6 +9,7 @@ export default class Navbar extends Component {
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onLocationClick = this.onLocationClick.bind(this);
   }
 
   onChange(evt) {
@@ -17,6 +18,10 @@ export default class Navbar extends Component {
 
   onSubmit(evt) {
     evt.preventDefault();
+  }
+
+  onLocationClick() {
+    this.props.addCurrentLocation(this.props.currentLocation);
   }
 
   componentDidMount() {
@@ -60,7 +65,7 @@ export default class Navbar extends Component {
             )}
             { location === '/map' && (
                 <div className="navbar-right">
-                    <button type="submit" className="btn btn-default navbar-btn" name="autocomplete">Current Location</button>
+                    <button type="submit" className="btn btn-default navbar-btn" name="autocomplete" onClick={this.onLocationClick}>Current Location</button>
                     <p id="navbar-or" className="navbar-right navbar-text">OR</p>
                 </div> )}
           </div>

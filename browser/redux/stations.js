@@ -23,12 +23,18 @@ const initialState = [
 
 /*----------  ACTION TYPES  ----------*/
 const RECEIVE_STATIONS = 'RECEIVE_STATIONS';
+const UPDATE_STATIONS = 'UPDATE_STATIONS';
 
 /*----------  ACTION CREATORS  ----------*/
 export const receiveStations = stations => ({
   type: RECEIVE_STATIONS,
   stations
 });
+
+const updateStations = stations => ({
+  type: UPDATE_STATIONS,
+  stations
+})
 
 /*----------  THUNKS  ----------*/
 export const fetchAndReceiveStations = () => dispatch => {
@@ -41,9 +47,13 @@ export const fetchAndReceiveStations = () => dispatch => {
     const convertedStations = convertStations(infoDetails, statusDetails);
     dispatch(receiveStations(convertedStations));
   });
-
-
 };
+
+export const updateStationFeed = () => dispatch => {
+ let timeout = setInterval(function() {
+    dispatch(fetchAndReceiveStations());
+  }, 10000);
+}
 
 /*----------  REDUCER  ----------*/
 export default (state = initialState, action) => {

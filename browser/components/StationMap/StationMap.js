@@ -12,9 +12,6 @@ class StationMapContents extends Component {
       activeMarker: {},
       selectedPlace: {},
       autocompleteInitiated: false,
-      place: null,
-      position: null,
-      places: []
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onPlaceClick = this.onPlaceClick.bind(this);
@@ -52,7 +49,8 @@ class StationMapContents extends Component {
   }
 
 renderAutoComplete() {
-    const {google, map} = this.props;
+    const {google} = this.props;
+    const map = this.refs.google && this.refs.google.map;
     if (!google || !map) return;
 
     const aref = this.props.autocomplete;
@@ -72,15 +70,13 @@ renderAutoComplete() {
         map.setCenter(place.geometry.location);
         map.setZoom(17);
       }
-
-      this.setState({ places: [
-          ...this.state.places,
-          {
-            place: place,
-            position: place.geometry.location
-          }
-        ]
+      this.props.addPlace({
+        place: place,
+        position: place.geometry.location
       });
+      // let bounds = new google.maps.LatLngBounds();
+      // this.props.places.forEach(place =>bounds.extend(place.position))
+      // map.fitBounds((bounds));
     });
   }
 
@@ -89,6 +85,7 @@ componentDidMount() {
     this.renderAutoComplete();
     this.setState({autocompleteInitiated: true});
   }
+  this.props.updateStationFeed();
 }
 
 componentDidUpdate(prevProps) {
@@ -100,8 +97,9 @@ componentDidUpdate(prevProps) {
 }
 
   render() {
-    const { loaded, google, stations, mapMode } = this.props;
-    const { selectedPlace, places } = this.state;
+    console.log('rendering map');
+    const { loaded, google, stations, mapMode, places } = this.props;
+    const { selectedPlace } = this.state;
     if (!loaded) {
       return (
           <div>Loading...</div>
@@ -118,6 +116,7 @@ componentDidUpdate(prevProps) {
           {stations.map((station, i) => {
             return (
             <StationMarker
+              stations={stations}
               {...station}
               mapMode={mapMode}
               onClick={this.onMarkerClick}
@@ -133,11 +132,23 @@ componentDidUpdate(prevProps) {
               visible={this.state.showingInfoWindow}
               onClose={() => this.onInfoWindowClose()}>
                 <div className="info-box">
-                  <h4>{selectedPlace.name}</h4>
-                  <ul>
-                    <li>Available Bikes: {selectedPlace.availableBikes}</li>
-                    <li>Available Docks: {selectedPlace.availableDocks}</li>
-                  </ul>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>{selectedPlace.name}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Available Bikes:</td>
+                        <td>{selectedPlace.availableBikes}</td>
+                      </tr>
+                      <tr>
+                        <td>Available Docks:</td>
+                        <td>{selectedPlace.availableDocks}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
             </InfoWindow>
         </Map>
@@ -154,8 +165,6 @@ class StationMapWrapper extends Component {
     return (
       <Map google={google}
           className={'map'}
-          style={mapStyle}
-          containerStyle={containerStyle}
           visible={false}
           >
             <StationMapContents {...props} />

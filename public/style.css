@@ -4,7 +4,7 @@
 }
 
 #nav .btn[disabled]{
-  background-color: #B9F6CA;
+  background-color: #80D8FF;
 }
 
 #map-mode-toggle-btn {
@@ -30,7 +30,7 @@
 
 
 /* Collapse navbar sooner */
-@media (max-width: 855px) {
+@media (max-width: 875) {
     .navbar-header {
         float: none;
     }
@@ -64,5 +64,8 @@
     }
     .collapse.in{
         display:block !important;
+    }
+    #navbar-or {
+      display: none;
     }
 }
