@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import {Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import { GAPI_KEY } from '../../config';
 import { stationMapProps, stationMapStyle, stationMapContainerStyle} from '../../google-maps/maps';
@@ -12,7 +11,6 @@ class StationMapContents extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      autocompleteInitiated: false,
     };
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
@@ -44,64 +42,17 @@ class StationMapContents extends Component {
     }
   }
 
-renderAutoComplete() {
-    const { google } = this.props;
-    const map = this.refs['station-map'] && this.refs['station-map'].map;
-
-    if (!google || !map) return;
-
-    const aref = this.props.autocomplete;
-    const node = ReactDOM.findDOMNode(aref);
-    var autocomplete = new google.maps.places.Autocomplete(node);
-    autocomplete.bindTo('bounds', map);
-
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (!place.geometry) {
-        return;
-      }
-
-      this.props.addPlace({
-        place: place,
-        position: place.geometry.location
-      });
-
-      if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(17);
-      }
-
-      // let bounds = new google.maps.LatLngBounds();
-      // this.props.places.forEach(place =>bounds.extend(place.position))
-      // map.fitBounds((bounds));
-    });
+  componentDidUpdate(prevProps) {
+    const { map, setStationMap, google, setGoogle } = this.props;
+    if (map && map !== prevProps.map) setStationMap(map);
+    if (google && google !== prevProps.google) setGoogle(google);
   }
-
-componentDidMount() {
-  this.props.updateStationStatus();
-  if (this.props.autocomplete) {
-    this.renderAutoComplete();
-    this.setState({autocompleteInitiated: true});
-  }
-}
-
-componentDidUpdate(prevProps) {
-  const { map } = this.props;
-  if (map !== prevProps.map || !this.state.autocompleteInitiated) {
-    this.renderAutoComplete();
-    this.setState({autocompleteInitiated: true});
-  }
-}
 
   render() {
     const { loaded, google, mapMode, stations, places } = this.props;
     const { selectedPlace } = this.state;
     if (!loaded) {
-      return (
-          <div>Loading...</div>
-        );
+      return (<div>Loading...</div>);
     } else {
       return (
         <Map ref="station-map" google={google}
@@ -125,8 +76,7 @@ componentDidUpdate(prevProps) {
           { places.map((place, idx) =>
             <Marker key={idx}
                     position={place.position} />
-            )
-          }
+          )}
 
           <InfoWindow
             marker={this.state.activeMarker}
@@ -159,26 +109,20 @@ componentDidUpdate(prevProps) {
   }
 }
 
+// Necessary for functionality of autocomplete search bar
 class StationMapWrapper extends Component {
   render() {
     const props = this.props;
-    const {google} = this.props;
-
+    const { google } = this.props;
     return (
       <Map google={google}
-          className={'map'}
-          visible={false}
-          >
-            <StationMapContents {...props} />
+           className={'map'}
+           visible={false}>
+          <StationMapContents {...props} />
       </Map>
     );
   }
 }
-
-
-Marker.propTypes = {
-  icon: React.PropTypes.object
-};
 
 export default GoogleApiWrapper({
   apiKey: GAPI_KEY,

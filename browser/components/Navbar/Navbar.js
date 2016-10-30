@@ -1,40 +1,19 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import SearchBar from '../SearchBar/SearchBarContainer';
 
 export default class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      input: ''
-    };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onLocationClick = this.onLocationClick.bind(this);
-  }
-
-  onChange(evt) {
-   this.setState({input: evt.target.value});
-  }
-
-  onSubmit(evt) {
-    evt.preventDefault();
-  }
-
-  onLocationClick() {
-    this.props.addCurrentLocation(this.props.currentLocation);
-  }
-
-  componentDidMount() {
-    this.props.setAutoComplete(this.refs.autocomplete);
-  }
-
   render() {
-    let { mapMode, toggleMapMode, setMapMode, location } = this.props;
+    let { mapMode, setMapMode, location, addCurrentLocation, currentLocation } = this.props;
     return (
       <nav className="navbar navbar-inverse navbar-static-top" id="nav">
         <div className="container-fluid">
           <div className="navbar-header" id="nav-header-block">
-            <button type="button" className="navbar-toggle collapsed pull-left" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button"
+                    className="navbar-toggle collapsed pull-left"
+                    data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1"
+                    aria-expanded="false">
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
@@ -45,8 +24,14 @@ export default class Navbar extends Component {
               location === '/map' && (
                 <div className="pull-right">
                   <div id="map-mode-toggle-btn">
-                    <button type="submit" className="btn btn-default navbar-btn" onClick={()=>setMapMode('bikes')} disabled={mapMode.mode === 'bikes'}>Bikes</button>
-                    <button type="submit" className="btn btn-default navbar-btn" onClick={()=>setMapMode('docks')} disabled={mapMode.mode === 'docks'}>Docks</button>
+                    <button type="submit"
+                            className="btn btn-default navbar-btn"
+                            onClick={() => setMapMode('bikes')}
+                            disabled={mapMode.mode === 'bikes'}>Bikes</button>
+                    <button type="submit"
+                            className="btn btn-default navbar-btn"
+                            onClick={() => setMapMode('docks')}
+                            disabled={mapMode.mode === 'docks'}>Docks</button>
                   </div>
                 </div>
               )
@@ -57,15 +42,20 @@ export default class Navbar extends Component {
               <li><Link to="/data">Data</Link></li>
             </ul>
             { location === '/map' && (
-                <form className="navbar-form navbar-right" role="search" onSubmit={this.onSubmit}>
+                <form className="navbar-form navbar-right"
+                      role="search"
+                      onSubmit={e => e.preventDefault()}>
                   <div className="form-group">
-                    <input ref="autocomplete" id="autocomplete-input"type="text" className="form-control" placeholder="Enter a location..." value={this.state.input} onChange={this.onChange}/>
+                    <SearchBar />
                   </div>
                 </form>
             )}
             { location === '/map' && (
                 <div className="navbar-right">
-                    <button type="submit" className="btn btn-default navbar-btn" name="autocomplete" onClick={this.onLocationClick}>Current Location</button>
+                    <button type="submit"
+                            className="btn btn-default navbar-btn"
+                            name="autocomplete"
+                            onClick={() => addCurrentLocation(currentLocation)}>Current Location</button>
                     <p id="navbar-or" className="navbar-right navbar-text">OR</p>
                 </div> )}
           </div>

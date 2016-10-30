@@ -7,10 +7,13 @@ const RESET_PLACES = 'RESET_PLACES';
 const ADD_CURRENT_LOCATION = 'ADD_CURRENT_LOCATION';
 
 /*----------  ACTION CREATORS  ----------*/
-export const addPlace = place => ({
+export const addPlace = place => {
+  console.log('in the action creator', place)
+  return ({
   type: ADD_PLACE,
   place
-});
+})
+};
 
 export const addCurrentLocation = location => ({
   type: ADD_CURRENT_LOCATION,

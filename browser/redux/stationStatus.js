@@ -36,7 +36,7 @@ export const loadStationStatus = () => dispatch => {
       dispatch(receiveStationStatus(stations));
     })
     .catch(err => {
-      // window.clearInterval(timeout);
+      window.clearInterval(timeout);
       console.error(err);
     });
 };
