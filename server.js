@@ -6,6 +6,8 @@ const path = require('path');
 
 const app = express();
 
+app.set('port', (process.env.PORT || 3000))
+
 app.use(morgan('dev'));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,6 +21,6 @@ validFrontendRoutes.forEach(route =>
   app.get(route, (req, res, next) => res.sendFile(indexPath))
 );
 
-app.listen(3000, function () {
+app.listen(app.get('port'), function () {
   console.log('Server listening on port', 3000);
 });
