@@ -54,7 +54,6 @@ export default class StationMarker extends Component {
     const { mapMode, id } = this.props;
     const stationMarker = this.refs[`station-${id}`];
     const statusChanged = this.statusChanged(prevProps);
-
     if (mapMode !== prevProps.mapMode || statusChanged) {
       stationMarker.marker.setIcon(this.getIcon());
     }
@@ -63,7 +62,6 @@ export default class StationMarker extends Component {
   render() {
     // Add icon to props to be passed down to marker
     const props = Object.assign({}, this.props, {icon: this.getIcon()});
-
     // Add reference to marker in order to reset icon when necessary
     const ref = `station-${props.id}`;
 

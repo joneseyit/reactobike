@@ -4,6 +4,7 @@ import { GAPI_KEY } from '../../config';
 import { stationMapProps, stationMapStyle, stationMapContainerStyle} from '../../google-maps/maps';
 import { fitBounds } from '../../google-maps/utils';
 import StationMarker from './StationMarkerContainer';
+import PlaceMarker from './PlaceMarker';
 
 class StationMapContents extends Component {
   constructor (props) {
@@ -12,20 +13,35 @@ class StationMapContents extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
+      zoomedIn: false
     };
-    this.onMarkerClick = this.onMarkerClick.bind(this);
+    this.onStationMarkerClick = this.onStationMarkerClick.bind(this);
+    this.onPlaceMarkerClick = this.onPlaceMarkerClick.bind(this);
     this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.setState = this.setState.bind(this);
   }
 
   // Show info window when marker is clicked, displaying station data
-  onMarkerClick(props, marker, e) {
+  onStationMarkerClick(props, marker, e) {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
       showingInfoWindow: true
     });
+  }
+
+  // Zoom in on place marker on when clicked
+  onPlaceMarkerClick(location) {
+    let { google, stationMap, places } = this.props;
+    if (this.state.zoomedIn) {
+      fitBounds(google, stationMap, places);
+      this.setState({ zoomedIn: false });
+    } else {
+      stationMap.setCenter(location);
+      stationMap.setZoom(17);
+      this.setState({ zoomedIn: true });
+    }
   }
 
   // Hide info window when 'x' is clicked
@@ -68,8 +84,9 @@ class StationMapContents extends Component {
   }
 
   render() {
+    const { onMapClick, onStationMarkerClick, onPlaceMarkerClick, onInfoWindowClose} = this;
     const { loaded, google, stations, places } = this.props;
-    const { selectedPlace } = this.state;
+    const { selectedPlace, activeMarker, showingInfoWindow } = this.state;
     if (!loaded) {
       return (<div>Loading...</div>);
     } else {
@@ -78,27 +95,29 @@ class StationMapContents extends Component {
           className="map"
           style={stationMapStyle}
           containerStyle={stationMapContainerStyle}
-          onClick={this.onMapClick}
+          onClick={onMapClick}
           {...stationMapProps}>
 
           { stations.map(stationId => {
             return (
             <StationMarker
               id={stationId}
-              onClick={this.onMarkerClick}
+              onClick={onStationMarkerClick}
               key={stationId}/>
             );
           })}
 
           { places.map((place, idx) =>
-            <Marker key={idx}
+            <PlaceMarker key={idx}
+                    idx={idx}
+                    onClick={() => onPlaceMarkerClick(place.geometry.location)}
                     position={place.geometry.location} />
           )}
 
           <InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}
-            onClose={() => this.onInfoWindowClose()}>
+            marker={activeMarker}
+            visible={showingInfoWindow}
+            onClose={() => onInfoWindowClose()}>
               <div className="info-box">
                 <table className="table">
                   <thead>
