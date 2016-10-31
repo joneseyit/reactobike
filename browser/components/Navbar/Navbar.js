@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import SearchBar from '../SearchBar/SearchBarContainer';
+import SearchBar from './SearchBarContainer';
+import LocationButton from './LocationButtonContainer';
+import MapModeButtons from './MapModeButtonsContainer';
 
 export default class Navbar extends Component {
   render() {
-    let { mapMode, setMapMode, location, addCurrentLocation, currentLocation } = this.props;
+    let { location } = this.props;
     return (
       <nav className="navbar navbar-inverse navbar-static-top" id="nav">
         <div className="container-fluid">
@@ -23,16 +25,7 @@ export default class Navbar extends Component {
             {
               location === '/map' && (
                 <div className="pull-right">
-                  <div id="map-mode-toggle-btn">
-                    <button type="submit"
-                            className="btn btn-default navbar-btn"
-                            onClick={() => setMapMode('bikes')}
-                            disabled={mapMode.mode === 'bikes'}>Bikes</button>
-                    <button type="submit"
-                            className="btn btn-default navbar-btn"
-                            onClick={() => setMapMode('docks')}
-                            disabled={mapMode.mode === 'docks'}>Docks</button>
-                  </div>
+                  <MapModeButtons />
                 </div>
               )
             }
@@ -44,7 +37,7 @@ export default class Navbar extends Component {
             { location === '/map' && (
                 <form className="navbar-form navbar-right"
                       role="search"
-                      onSubmit={e => e.preventDefault()}>
+                      onSubmit={evt => evt.preventDefault()}>
                   <div className="form-group">
                     <SearchBar />
                   </div>
@@ -52,10 +45,7 @@ export default class Navbar extends Component {
             )}
             { location === '/map' && (
                 <div className="navbar-right">
-                    <button type="submit"
-                            className="btn btn-default navbar-btn"
-                            name="autocomplete"
-                            onClick={() => addCurrentLocation(currentLocation)}>Current Location</button>
+                    <LocationButton />
                     <p id="navbar-or" className="navbar-right navbar-text">OR</p>
                 </div> )}
           </div>

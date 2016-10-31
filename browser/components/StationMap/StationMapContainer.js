@@ -1,38 +1,19 @@
 import { connect } from 'react-redux';
 import StationMap from './StationMap';
-import { loadCurrentLocation } from '../../redux/currentLocation';
-import { renderAutoComplete } from '../../redux/stationMap';
 import { setStationMap } from '../../redux/stationMap';
 import { setGoogle } from '../../redux/google';
-import { updateStationStatus, loadStationStatus } from '../../redux/stationStatus';
-import { addPlace } from '../../redux/places';
+import { setGeocoder } from '../../redux/geocoder';
 
 const mapStateToProps = state => {
-    let { stationInfo,
-          mapMode,
-          autocomplete,
-          currentLocation,
-          places } = state;
-
+    let { stationInfo, places } = state;
     let stations = stationInfo.map(station => station.id);
-
-    return {
-      stations,
-      mapMode,
-      autocomplete,
-      currentLocation,
-      places
-    };
+    return { stations, places };
 };
 
 const mapDispatchToProps = dispatch => ({
-  loadCurrentLocation: () => dispatch(loadCurrentLocation()),
-  updateStationStatus: () => dispatch(updateStationStatus()),
-  loadStationStatus: () => dispatch(loadStationStatus()),
-  addPlace: place => dispatch(addPlace(place)),
-  renderAutoComplete: (google, map, ref) => dispatch(renderAutoComplete(google, map, ref)),
   setStationMap: map => dispatch(setStationMap(map)),
-  setGoogle: google => dispatch(setGoogle(google))
+  setGoogle: google => dispatch(setGoogle(google)),
+  setGeocoder: geocoder => dispatch(setGeocoder(geocoder))
 });
 
 export default connect(

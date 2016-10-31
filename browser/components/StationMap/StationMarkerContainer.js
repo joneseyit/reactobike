@@ -1,13 +1,11 @@
 import { connect } from 'react-redux';
 import StationMarker from './StationMarker';
-import { initialState as emptyStatus } from '../../redux/stationStatus';
+import { initialState as noStatus } from '../../redux/stationStatus';
 
-const mapStateToProps = ({stationStatus, stationInfo}, {id}) => {
+const mapStateToProps = ({stationStatus, stationInfo, mapMode}, {id}) => {
   let info = stationInfo.find(station => station.id === id);
-  let { name,
-        position,
-        capacity } = info;
-  let status = stationStatus.find(station => station.id === id) || emptyStatus;
+  let { name, position, capacity } = info;
+  let status = stationStatus.find(station => station.id === id) || noStatus;
   let { availableBikes,
         availableDocks,
         disabledBikes,
@@ -24,7 +22,8 @@ const mapStateToProps = ({stationStatus, stationInfo}, {id}) => {
            disabledDocks,
            isInstalled,
            isRenting,
-           isReturning };
+           isReturning,
+           mapMode };
 };
 
 export default connect(

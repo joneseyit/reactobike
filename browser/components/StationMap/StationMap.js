@@ -18,6 +18,7 @@ class StationMapContents extends Component {
     this.setState = this.setState.bind(this);
   }
 
+  // Show info window when marker is clicked, displaying station data
   onMarkerClick(props, marker, e) {
     this.setState({
       selectedPlace: props,
@@ -26,6 +27,7 @@ class StationMapContents extends Component {
     });
   }
 
+  // Hide info window when 'x' is clicked
   onInfoWindowClose() {
     this.setState({
       showingInfoWindow: false,
@@ -33,6 +35,7 @@ class StationMapContents extends Component {
     });
   }
 
+  // Hide info window when map is clicked
   onMapClick() {
     if (this.state.showingInfoWindow) {
       this.setState({
@@ -42,14 +45,20 @@ class StationMapContents extends Component {
     }
   }
 
+  // Save Google Maps objects to store for access by other components
   componentDidUpdate(prevProps) {
-    const { map, setStationMap, google, setGoogle } = this.props;
-    if (map && map !== prevProps.map) setStationMap(map);
-    if (google && google !== prevProps.google) setGoogle(google);
+    const { map, setStationMap, google, setGoogle, setGeocoder } = this.props;
+    if (map && map !== prevProps.map) {
+      setStationMap(map);
+    }
+    if (google && google !== prevProps.google) {
+      setGoogle(google);
+      setGeocoder(new google.maps.Geocoder);
+    }
   }
 
   render() {
-    const { loaded, google, mapMode, stations, places } = this.props;
+    const { loaded, google, stations, places } = this.props;
     const { selectedPlace } = this.state;
     if (!loaded) {
       return (<div>Loading...</div>);
@@ -60,14 +69,12 @@ class StationMapContents extends Component {
           style={stationMapStyle}
           containerStyle={stationMapContainerStyle}
           onClick={this.onMapClick}
-          {...stationMapProps}
-          center={this.state.position || stationMapProps.center}>
+          {...stationMapProps}>
 
           { stations.map(stationId => {
             return (
             <StationMarker
               id={stationId}
-              mapMode={mapMode}
               onClick={this.onMarkerClick}
               key={stationId}/>
             );
@@ -126,5 +133,5 @@ class StationMapWrapper extends Component {
 
 export default GoogleApiWrapper({
   apiKey: GAPI_KEY,
-  containerStyle: {height: '100%', width: '100%'}
+  libraries: ['places', 'geolocationmarker']
 })(StationMapWrapper);

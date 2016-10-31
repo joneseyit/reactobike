@@ -35,6 +35,13 @@ const paths = {
 };
 
 /*----------  ICONS OBJECTS  ----------*/
+export const stationIcon = {
+  scale: 0.5,
+  strokeColor: 'black',
+  strokeWeight: 0.5,
+  fillOpacity: 1
+};
+
 export const bikeIcon = {
   scale: 0.5,
   strokeColor: 'black',

@@ -1,17 +1,17 @@
 const initialState = null;
 
 /*----------  ACTION TYPES  ----------*/
-const SET_STATION_MAP = 'SET_STATION_MAP';
-const CLEAR_STATION_MAP = 'CLEAR_STATION_MAP';
+const SET_GEOCODER = 'SET_GEOCODER';
+const CLEAR_GEOCODER = 'CLEAR_GEOCODER';
 
 /*----------  ACTION CREATORS  ----------*/
-export const setStationMap = map => ({
-  type: SET_STATION_MAP,
-  map
+export const setGeocoder = geocoder => ({
+  type: SET_GEOCODER,
+  geocoder
 });
 
-export const clearStationMap = () => ({
-  type: CLEAR_STATION_MAP
+export const clearGeocoder = () => ({
+  type: CLEAR_GEOCODER
 });
 
 /*----------  THUNKS  ----------*/
@@ -19,9 +19,9 @@ export const clearStationMap = () => ({
 /*----------  REDUCER  ----------*/
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SET_STATION_MAP:
-      return action.map || null;
-    case CLEAR_STATION_MAP:
+    case SET_GEOCODER:
+      return action.geocoder || null;
+    case CLEAR_GEOCODER:
       return null;
     default: return state;
   }

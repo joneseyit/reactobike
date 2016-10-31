@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import SearchBar from './SearchBar';
-import { addPlace } from '../../redux/places';
-import { renderAutoComplete } from '../../redux/stationMap';
+import { addPlace, renderAutoComplete } from '../../redux/places';
 
 const mapStateToProps = ({ stationMap, google }) => ({ stationMap, google });
 

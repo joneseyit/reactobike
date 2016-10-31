@@ -2,7 +2,7 @@ import * as styles from './mapStyles';
 
 /*----------  MAP PROPS  ----------*/
 export const stationMapProps = {
-  zoom: 17,
+  zoom: 10,
   initialCenter: {lat: 40.705007, lng: -74.00914},
   mapTypeControl: true,
   scaleControl: true,
