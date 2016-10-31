@@ -1,3 +1,9 @@
+/**
+ *  'google' object is created when Station Map is rendered,
+ *  therefore google.geocoder object is saved to store for
+ *  access by other components
+ */
+
 const initialState = null;
 
 /*----------  ACTION TYPES  ----------*/
@@ -13,8 +19,6 @@ export const setGeocoder = geocoder => ({
 export const clearGeocoder = () => ({
   type: CLEAR_GEOCODER
 });
-
-/*----------  THUNKS  ----------*/
 
 /*----------  REDUCER  ----------*/
 export default (state = initialState, action) => {

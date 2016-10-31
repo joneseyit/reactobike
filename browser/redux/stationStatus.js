@@ -1,5 +1,3 @@
-'use strict';
-
 import axios from 'axios';
 import { convertStationStatus } from '../converters';
 import { STATION_STATUS_URL } from '../config';
@@ -32,7 +30,7 @@ export const receiveStationStatus = stations => ({
 export const loadStationStatus = () => dispatch => {
   axios.get(STATION_STATUS_URL)
     .then(res => {
-      let stations = res.data.data.stations.map(station => convertStationStatus(station));
+      const stations = res.data.data.stations.map(station => convertStationStatus(station));
       dispatch(receiveStationStatus(stations));
     })
     .catch(err => {

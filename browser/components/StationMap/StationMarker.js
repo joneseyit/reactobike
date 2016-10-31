@@ -5,23 +5,23 @@ import { stationIcon, evaluateColor, evaluatePath } from '../../google-maps/icon
 export default class StationMarker extends Component {
   // Get color of icon based on station status
   getColor() {
-    let { mapMode,
+    const { mapMode,
           availableBikes,
           availableDocks} = this.props;
 
-    let counter = mapMode.mode === 'docks' ? availableDocks : availableBikes;
+    const counter = mapMode === 'docks' ? availableDocks : availableBikes;
 
     return evaluateColor(counter);
   }
 
   // Get SVG path of icon based on station status
   getPath() {
-    let { mapMode,
+    const { mapMode,
           availableBikes,
           availableDocks,
           capacity } = this.props;
 
-    let ratio = mapMode.mode === 'docks' ?
+    const ratio = mapMode === 'docks' ?
       (availableDocks / capacity) :
       (availableBikes / capacity);
 
@@ -30,20 +30,20 @@ export default class StationMarker extends Component {
 
   // Get icon object for marker based on station status
   getIcon() {
-    let { google, mapMode } = this.props;
-    let fillColor = this.getColor();
-    let path = this.getPath();
-    let anchor = new google.maps.Point(64, 64);
+    const { google } = this.props;
+    const fillColor = this.getColor();
+    const path = this.getPath();
+    const anchor = new google.maps.Point(64, 64);
 
     return Object.assign({}, stationIcon, { anchor, fillColor, path });
   }
 
   // Evaluate whether station status has changed
   statusChanged(prev) {
-    let prevBikes = prev && prev.availableBikes;
-    let prevDocks = prev && prev.availableDocks;
-    let currBikes = this.props.availableBikes;
-    let currDocks = this.props.availableDocks;
+    const prevBikes = prev && prev.availableBikes;
+    const prevDocks = prev && prev.availableDocks;
+    const currBikes = this.props.availableBikes;
+    const currDocks = this.props.availableDocks;
 
     if (prevBikes !== currBikes || prevDocks !== currDocks) return true;
     else return false;
@@ -51,21 +51,21 @@ export default class StationMarker extends Component {
 
   // Determine whether icon should be reset based on map mode change or station status change
   componentDidUpdate(prevProps) {
-    let { mapMode, id } = this.props;
-    let stationMarker = this.refs[`station-${id}`];
-    let statusChanged = this.statusChanged(prevProps);
+    const { mapMode, id } = this.props;
+    const stationMarker = this.refs[`station-${id}`];
+    const statusChanged = this.statusChanged(prevProps);
 
-    if (mapMode.mode !== prevProps.mapMode.mode || statusChanged) {
+    if (mapMode !== prevProps.mapMode || statusChanged) {
       stationMarker.marker.setIcon(this.getIcon());
     }
   }
 
   render() {
     // Add icon to props to be passed down to marker
-    let props = Object.assign({}, this.props, {icon: this.getIcon()});
+    const props = Object.assign({}, this.props, {icon: this.getIcon()});
 
     // Add reference to marker in order to reset icon when necessary
-    let ref = `station-${props.id}`;
+    const ref = `station-${props.id}`;
 
     return ( <Marker ref={ref} {...props} /> );
   }

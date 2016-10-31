@@ -3,10 +3,10 @@ import StationMarker from './StationMarker';
 import { initialState as noStatus } from '../../redux/stationStatus';
 
 const mapStateToProps = ({stationStatus, stationInfo, mapMode}, {id}) => {
-  let info = stationInfo.find(station => station.id === id);
-  let { name, position, capacity } = info;
-  let status = stationStatus.find(station => station.id === id) || noStatus;
-  let { availableBikes,
+  const info = stationInfo.find(station => station.id === id);
+  const { name, position, capacity } = info;
+  const status = stationStatus.find(station => station.id === id) || noStatus;
+  const { availableBikes,
         availableDocks,
         disabledBikes,
         disabledDocks,

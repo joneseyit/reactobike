@@ -6,7 +6,7 @@ import MapModeButtons from './MapModeButtonsContainer';
 
 export default class Navbar extends Component {
   render() {
-    let { location } = this.props;
+    const { location } = this.props;
     return (
       <nav className="navbar navbar-inverse navbar-static-top" id="nav">
         <div className="container-fluid">

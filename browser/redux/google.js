@@ -1,3 +1,9 @@
+/**
+ *  'google' object is created when Station Map is rendered,
+ *  therefore google object is saved to store for
+ *  access by other components
+ */
+
 const initialState = null;
 
 /*----------  ACTION TYPES  ----------*/

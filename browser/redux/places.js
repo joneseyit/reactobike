@@ -6,21 +6,13 @@ const initialState = [];
 const ADD_PLACE = 'ADD_PLACE';
 const REMOVE_PLACE = 'REMOVE_PLACE';
 const RESET_PLACES = 'RESET_PLACES';
-const ADD_CURRENT_LOCATION = 'ADD_CURRENT_LOCATION';
 
 /*----------  ACTION CREATORS  ----------*/
-export const addPlace = place => {
-  console.log('in the action creator', place)
-  return ({
+export const addPlace = place => ({
   type: ADD_PLACE,
   place
-})
-};
-
-export const addCurrentLocation = location => ({
-  type: ADD_CURRENT_LOCATION,
-  location
 });
+
 
 export const removePlace = place => ({
   type: REMOVE_PLACE,
@@ -32,10 +24,12 @@ export const resetPlaces = () => ({
 });
 
 /*----------  THUNKS  ----------*/
+// Adds google maps autocomplete searchbar functionality to DOM object
+// Callback function adds selected place to store
 export const renderAutoComplete = (google, stationMap, aref) => dispatch => {
   if (!google || !stationMap) return;
   const node = ReactDOM.findDOMNode(aref);
-  let autocomplete = new google.maps.places.Autocomplete(node);
+  const autocomplete = new google.maps.places.Autocomplete(node);
   autocomplete.bindTo('bounds', stationMap);
 
   autocomplete.addListener('place_changed', () => {
@@ -44,10 +38,7 @@ export const renderAutoComplete = (google, stationMap, aref) => dispatch => {
       return;
     }
 
-    dispatch(addPlace({
-      place: place,
-      position: place.geometry.location
-    }));
+    dispatch(addPlace(place));
 
     if (place.geometry.viewport) {
       stationMap.fitBounds(place.geometry.viewport);
@@ -63,30 +54,19 @@ export const renderAutoComplete = (google, stationMap, aref) => dispatch => {
 };
 
 export const geocodeCurrentLocation = geocoder => dispatch => {
-  console.log('the geocoder', geocoder)
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
-      var pos = {
+      const pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
-      console.log('current position',pos);
       geocoder.geocode({location: pos}, (results, status) => {
       if (status === 'OK') {
-        let place = results[1];
-        console.log('the place', results[1]);
-        let location = place.geometry.location;
-        console.log('the location', location);
-        if (place) {
-          dispatch(addPlace({
-            place: place,
-            position: place.geometry.location
-          }));
-        } else {
-          window.alert('No results found');
-        }
+        const place = results[1];
+        if (place) dispatch(addPlace(place));
+        else console.error('No results found');
       } else {
-        window.alert('Geocoder failed due to: ' + status);
+        console.error('Geocoder failed due to: ' + status);
       }
     });
 
@@ -94,22 +74,12 @@ export const geocodeCurrentLocation = geocoder => dispatch => {
   }
 };
 
-
-
 /*----------  REDUCER  ----------*/
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ADD_PLACE:
-      return [...state, action.place];
-      case ADD_CURRENT_LOCATION:
-      return [...state, {
-        place: null,
-        position: action.location
-      }];
-    case REMOVE_PLACE:
-      return state.filter(place => place.place !== action.place);
-    case RESET_PLACES:
-      return [];
+    case ADD_PLACE: return [...state, action.place];
+    case REMOVE_PLACE: return state.filter(place => place !== action.place);
+    case RESET_PLACES: return [];
     default: return state;
   }
 };

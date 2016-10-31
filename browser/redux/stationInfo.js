@@ -1,5 +1,3 @@
-'use strict';
-
 import axios from 'axios';
 import { convertStationInfo } from '../converters';
 import { STATION_INFORMATION_URL } from '../config';

@@ -5,8 +5,8 @@ import { setGoogle } from '../../redux/google';
 import { setGeocoder } from '../../redux/geocoder';
 
 const mapStateToProps = state => {
-    let { stationInfo, places } = state;
-    let stations = stationInfo.map(station => station.id);
+    const { stationInfo, places } = state;
+    const stations = stationInfo.map(station => station.id);
     return { stations, places };
 };
 

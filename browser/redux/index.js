@@ -1,5 +1,3 @@
-'use strict';
-
 import { combineReducers } from 'redux';
 import stationInfo from './stationInfo';
 import stationStatus from './stationStatus';

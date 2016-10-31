@@ -82,7 +82,7 @@ class StationMapContents extends Component {
 
           { places.map((place, idx) =>
             <Marker key={idx}
-                    position={place.position} />
+                    position={place.geometry.location} />
           )}
 
           <InfoWindow

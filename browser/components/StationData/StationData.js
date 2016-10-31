@@ -4,7 +4,7 @@ import { cropCoordinates } from '../../converters';
 
 export default class Stations extends Component {
   render() {
-    let { stations } = this.props;
+    const { stations } = this.props;
     return (
       <div className="container">
         <h3>Station Info</h3>
@@ -23,7 +23,7 @@ export default class Stations extends Component {
           </thead>
           <tbody>
             {stations.map((station, i) => {
-              let location = cropCoordinates(station.position);
+              const location = cropCoordinates(station.position);
               return (
                 <tr key={i}>
                   <td>{station.id}</td>

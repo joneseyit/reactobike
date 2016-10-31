@@ -1,17 +1,4 @@
-import { bikeIcon, dockIcon } from '../google-maps/icons';
-
-/*----------  MODES  ----------*/
-const bikeMode = {
-  mode: 'bikes',
-  icon: bikeIcon
-};
-
-const dockMode = {
-  mode: 'docks',
-  icon: dockIcon
-};
-
-const initialState = bikeMode;
+const initialState = 'bikes';
 
 /*----------  ACTION TYPES  ----------*/
 const SET_MAP_MODE = 'SET_MAP_MODE';
@@ -31,9 +18,9 @@ export const toggleMapMode = () => ({
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_MAP_MODE:
-      return action.mode === 'docks' ? dockMode : bikeMode;
+      return action.mode;
     case TOGGLE_MAP_MODE:
-      return state.mode === 'bikes' ? dockMode : bikeMode;
+      return state.mode === 'bikes' ? 'docks' : 'bikes';
     default: return state;
   }
 };

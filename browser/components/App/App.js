@@ -5,7 +5,7 @@ import Navbar from '../Navbar/NavbarContainer';
 
 export default class App extends Component {
   render() {
-    let { children, location } = this.props;
+    const { children, location } = this.props;
     return (
       <div className="app">
         <Navbar location={location.pathname}/>
