@@ -42,7 +42,7 @@ export const loadStationStatus = () => dispatch => {
 export const updateStationStatus = () => dispatch => {
  timeout = setInterval(() => {
     dispatch(loadStationStatus());
-  }, 10000);
+  }, 20000);
 };
 
 /*----------  REDUCER  ----------*/

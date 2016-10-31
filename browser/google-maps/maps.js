@@ -3,7 +3,7 @@ import * as styles from './mapStyles';
 /*----------  MAP PROPS  ----------*/
 export const stationMapProps = {
   zoom: 13,
-  initialCenter: { lat: 40.781386, lng: -73.966675 },
+  initialCenter: { lat: 40.725, lng: -74.000 },
   mapTypeControl: true,
   scaleControl: true,
   streetViewControl: true,

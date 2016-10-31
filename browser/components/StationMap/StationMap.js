@@ -50,11 +50,12 @@ class StationMapContents extends Component {
   componentDidUpdate(prevProps) {
     const { map, setStationMap, google, setGoogle, setGeocoder, places } = this.props;
     const stationMapRef = this.refs['station-map'];
-    let stationMap = stationMapRef && stationMapRef.map;
-    console.log('the station map', stationMap);
+    const stationMap = stationMapRef && stationMapRef.map;
+
     if (stationMap && stationMap !== prevProps.stationMap) {
       setStationMap(stationMap);
     }
+
     if (google && google !== prevProps.google) {
       setGoogle(google);
       setGeocoder(new google.maps.Geocoder);
