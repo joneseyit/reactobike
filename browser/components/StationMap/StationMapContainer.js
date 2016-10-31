@@ -4,10 +4,9 @@ import { setStationMap } from '../../redux/stationMap';
 import { setGoogle } from '../../redux/google';
 import { setGeocoder } from '../../redux/geocoder';
 
-const mapStateToProps = state => {
-    const { stationInfo, places } = state;
+const mapStateToProps = ({ stationInfo, places, stationMap }) => {
     const stations = stationInfo.map(station => station.id);
-    return { stations, places };
+    return { stations, places, stationMap };
 };
 
 const mapDispatchToProps = dispatch => ({

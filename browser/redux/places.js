@@ -40,16 +40,13 @@ export const renderAutoComplete = (google, stationMap, aref) => dispatch => {
 
     dispatch(addPlace(place));
 
-    if (place.geometry.viewport) {
-      stationMap.fitBounds(place.geometry.viewport);
-    } else {
-      stationMap.setCenter(place.geometry.location);
-      stationMap.setZoom(17);
-    }
-
-    // let bounds = new google.maps.LatLngBounds();
-    // this.props.places.forEach(place =>bounds.extend(place.position))
-    // map.fitBounds((bounds));
+    // Autopositioning disabled due to auto-binding to places array
+    // if (place.geometry.viewport) {
+    //   stationMap.fitBounds(place.geometry.viewport);
+    // } else {
+    //   stationMap.setCenter(place.geometry.location);
+    //   stationMap.setZoom(17);
+    // }
   });
 };
 
@@ -69,7 +66,6 @@ export const geocodeCurrentLocation = geocoder => dispatch => {
         console.error('Geocoder failed due to: ' + status);
       }
     });
-
     });
   }
 };

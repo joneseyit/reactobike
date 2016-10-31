@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
 import { GAPI_KEY } from '../../config';
 import { stationMapProps, stationMapStyle, stationMapContainerStyle} from '../../google-maps/maps';
+import { fitBounds } from '../../google-maps/utils';
 import StationMarker from './StationMarkerContainer';
 
 class StationMapContents extends Component {
@@ -47,14 +48,22 @@ class StationMapContents extends Component {
 
   // Save Google Maps objects to store for access by other components
   componentDidUpdate(prevProps) {
-    const { map, setStationMap, google, setGoogle, setGeocoder } = this.props;
-    if (map && map !== prevProps.map) {
-      setStationMap(map);
+    const { map, setStationMap, google, setGoogle, setGeocoder, places } = this.props;
+    const stationMapRef = this.refs['station-map'];
+    let stationMap = stationMapRef && stationMapRef.map;
+    console.log('the station map', stationMap);
+    if (stationMap && stationMap !== prevProps.stationMap) {
+      setStationMap(stationMap);
     }
     if (google && google !== prevProps.google) {
       setGoogle(google);
       setGeocoder(new google.maps.Geocoder);
     }
+
+    if (stationMap && google && prevProps.places.length !== places.length) {
+      fitBounds(google, stationMap, places);
+    }
+
   }
 
   render() {
