@@ -1,4 +1,3 @@
-
 /*----------  ICON SVG PATHS  ----------*/
 
 /**
@@ -25,7 +24,7 @@ const colors = {
   unavailable: '#9E9E9E'
 };
 
-const paths = {
+const moonPaths = {
   empty: newMoon,
   low: waningCrescent,
   half: lastQuarter,
@@ -35,8 +34,16 @@ const paths = {
 };
 
 /*----------  ICON OBJECT  ----------*/
-export const stationIcon = {
+export const moonIcon = {
   scale: 0.5,
+  strokeColor: 'black',
+  strokeWeight: 0.5,
+  fillOpacity: 1
+};
+
+export const dotIcon = {
+  path: 0,
+  scale: 5,
   strokeColor: 'black',
   strokeWeight: 0.5,
   fillOpacity: 1
@@ -57,12 +64,12 @@ export const evaluateColor = (counter) => {
 
 export const evaluatePath = (ratio) => {
     switch (true) {
-      case typeof ratio !== 'number': return paths.unavailable;
-      case ratio <= 0: return paths.empty;
-      case ratio <= 0.25: return paths.low;
-      case ratio <= 0.75: return paths.half;
-      case ratio < 1: return paths.most;
-      case ratio >= 1: return paths.full;
-      default: return paths.unavailable;
+      case typeof ratio !== 'number': return moonPaths.unavailable;
+      case ratio <= 0: return moonPaths.empty;
+      case ratio <= 0.25: return moonPaths.low;
+      case ratio <= 0.75: return moonPaths.half;
+      case ratio < 1: return moonPaths.most;
+      case ratio >= 1: return moonPaths.full;
+      default: return moonPaths.unavailable;
     }
 };

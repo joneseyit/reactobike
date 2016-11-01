@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import StationMarker from './StationMarker';
 import { initialState as noStatus } from '../../redux/stationStatus';
 
-const mapStateToProps = ({stationStatus, stationInfo, mapMode}, {id}) => {
+const mapStateToProps = ({stationStatus, stationInfo, mapMode, stationMap }, {id}) => {
   const info = stationInfo.find(station => station.id === id);
   const { name, position, capacity } = info;
   const status = stationStatus.find(station => station.id === id) || noStatus;

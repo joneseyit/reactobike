@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import {Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
+import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
 import { GAPI_KEY } from '../../config';
-import { stationMapProps, stationMapStyle, stationMapContainerStyle} from '../../google-maps/maps';
+import { stationMapProps, stationMapStyle, stationMapContainerStyle}  from '../../google-maps/maps';
 import { fitBounds } from '../../google-maps/utils';
 import StationMarker from './StationMarkerContainer';
 import PlaceMarker from './PlaceMarker';
 
-class StationMapContents extends Component {
+class StationMap extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -64,7 +64,7 @@ class StationMapContents extends Component {
 
   // Save Google Maps objects to store for access by other components
   componentDidUpdate(prevProps) {
-    const { map, setStationMap, google, setGoogle, setGeocoder, places } = this.props;
+    const { setStationMap, google, setGoogle, setGeocoder, places } = this.props;
     const stationMapRef = this.refs['station-map'];
     const stationMap = stationMapRef && stationMapRef.map;
 
@@ -145,22 +145,7 @@ class StationMapContents extends Component {
   }
 }
 
-// Necessary for functionality of autocomplete search bar
-class StationMapWrapper extends Component {
-  render() {
-    const props = this.props;
-    const { google } = this.props;
-    return (
-      <Map google={google}
-           className={'map'}
-           visible={false}>
-          <StationMapContents {...props} />
-      </Map>
-    );
-  }
-}
-
 export default GoogleApiWrapper({
   apiKey: GAPI_KEY,
   libraries: ['places', 'geolocationmarker']
-})(StationMapWrapper);
+})(StationMap);

@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 export default class SearchBar extends Component {
   componentDidUpdate(prevProps) {
     const { stationMap, google, renderAutoComplete } = this.props;
-    if (stationMap !== prevProps.stationMap) {
-      if (!google || !stationMap) return;
+    if (google && stationMap && (google !== prevProps.google || stationMap !== prevProps.stationMap)) {
       renderAutoComplete(google, stationMap, this.refs.autocomplete);
     }
   }
