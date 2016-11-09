@@ -15,7 +15,8 @@ class StationMap extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      zoomedIn: false
+      zoomedIn: false,
+      places: []
     };
     this.onStationMarkerClick = this.onStationMarkerClick.bind(this);
     this.onPlaceMarkerClick = this.onPlaceMarkerClick.bind(this);
@@ -36,11 +37,10 @@ class StationMap extends Component {
   // Zoom in on place marker on when clicked
   onPlaceMarkerClick(location) {
     let { google, stationMap, route } = this.props;
+    let { places } = this.state;
     if (this.state.zoomedIn) {
-      let places = [];
-      if (route.origin) places.push(route.origin);
-      if (route.destination) places.push(route.destination);
       fitBounds(google, stationMap, places);
+      if (stationMap.getZoom() >= 17) stationMap.setZoom(15);
       this.setState({ zoomedIn: false });
     } else {
       stationMap.setCenter(location);
@@ -85,25 +85,24 @@ class StationMap extends Component {
     if (stationMap && google &&
           (prevProps.route.originPlace !== route.originPlace ||
            prevProps.route.destinationPlace !== route.destinationPlace) ) {
-      let places = [];
-      if (route.originPlace) places.push(route.originPlace);
-      if (route.destinationPlace) places.push(route.destinationPlace);
-      if (places.length) {
+      if (route.originPlace) {
+        let places = route.destinationPlace ?
+        [route.originPlace, route.destinationPlace] :
+        [route.originPlace];
+        this.setState({places});
         fitBounds(google, stationMap, places);
       } else {
+        this.setState({places: []});
         stationMap.setCenter(stationMapProps.initialCenter);
         stationMap.setZoom(stationMapProps.zoom);
       }
     }
   }
+
   render() {
     const { onMapClick, onStationMarkerClick, onPlaceMarkerClick, onInfoWindowClose} = this;
-    const { loaded, google, stations, route } = this.props;
-    const { selectedPlace, activeMarker, showingInfoWindow } = this.state;
-    let places = [];
-    if (route.origin) places.push(route.origin);
-    if (route.destination) places.push(route.destination);
-    console.log(route);
+    const { loaded, google, stations } = this.props;
+    const { selectedPlace, activeMarker, showingInfoWindow, places } = this.state;
     if (!loaded) {
       return (<div>Loading map...</div>);
     } else {
@@ -125,11 +124,11 @@ class StationMap extends Component {
           })}
 
           { places.map((place, idx) => (
-              <PlaceMarker key={idx}
+              <PlaceMarker {...place}
+                           key={idx}
                            onClick={() => onPlaceMarkerClick(place.geometry.location)}
                            position={place.geometry.location} />
             ))
-
           }
 
           <InfoWindow

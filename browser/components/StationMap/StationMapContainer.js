@@ -29,10 +29,7 @@ const mapStateToProps = ({ stationInfo, google, stationMap, zoomLevel, route }) 
       .filter(station => {
         if (route.originPlace) {
         let { lat, lng} = station.position;
-        console.log('station', lat, lng);
-        console.log('origin', latOrigin, lngOrigin);
         let dist = distance(lat, lng, latOrigin, lngOrigin, 'K');
-        console.log(dist);
           if (dist < 0.5) return true;
           if (route.destinationPlace) {
             if (distance(lat, lng, latDestination, lngDestination, 'K') < 0.5) return true;

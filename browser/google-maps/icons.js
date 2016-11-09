@@ -15,7 +15,7 @@ const fullMoon = 'M25,45a20,20 0 1,0 40,0a20,20 0 1,0 -40,0';
 
  const newMoon = 'M45,27c9.925,0,18,8.075,18,18c0,9.925-8.075,18-18,18c-9.925,0-18-8.075-18-18C27,35.075,35.075,27,45,27 M45,25  c-11.046,0-20,8.954-20,20s8.954,20,20,20s20-8.954,20-20S56.046,25,45,25L45,25z';
 
-
+const star = 'm25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z'
 /*----------  ICON COLOR-PATH MAPS  ----------*/
 const colors = {
   empty: '#F44336',
@@ -47,6 +47,15 @@ export const dotIcon = {
   strokeColor: 'black',
   strokeWeight: 0.5,
   fillOpacity: 1
+};
+
+export const starIcon = {
+  path: star,
+  scale: 0.67,
+  strokeColor: 'black',
+  strokeWeight: 1,
+  fillOpacity: 1,
+  fillColor: 'green'
 };
 
 /*----------  ICON EVALUATOR FUNCTIONS  ----------*/

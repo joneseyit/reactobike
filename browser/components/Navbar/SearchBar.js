@@ -10,8 +10,11 @@ export default class SearchBar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { stationMap, google } = this.props;
-    if (google && stationMap && (google !== prevProps.google || stationMap !== prevProps.stationMap)) {
+    const { stationMap, google, route } = this.props;
+    if (google && stationMap && (google !== prevProps.google
+        || stationMap !== prevProps.stationMap)
+        || (route.originPlace !== prevProps.route.originPlace
+            || route.destinationPlace !== prevProps.route.destinationPlace)) {
       this.props.renderAutoComplete(google, stationMap, this.refs.autocomplete);
       // if (!google || !stationMap) return;
       // const node = ReactDOM.findDOMNode(this.refs.autocomplete);
