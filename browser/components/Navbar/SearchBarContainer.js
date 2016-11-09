@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import SearchBar from './SearchBar';
-import { addPlace, renderAutoComplete } from '../../redux/places';
+import { renderAutoComplete, resetPlaces } from '../../redux/route';
 
-const mapStateToProps = ({ stationMap, google }) => ({ stationMap, google });
+const mapStateToProps = ({ stationMap, google, route }) => ({ stationMap, google, route });
 
 const mapDispatchToProps = dispatch => ({
-  addPlace: place => dispatch(addPlace(place)),
+  resetPlaces: () => dispatch(resetPlaces()),
   renderAutoComplete: (google, stationMap, aref) =>
                         dispatch(renderAutoComplete(google, stationMap, aref))
 });

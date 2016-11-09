@@ -6,7 +6,7 @@ import reducer from './redux';
 
 export default createStore(
   reducer,
-  applyMiddleware(thunk
-    // createLogger()
+  applyMiddleware(thunk,
+    createLogger()
     )
 );

@@ -3,7 +3,11 @@ import { Marker } from 'google-maps-react';
 
 export default class PlaceMarker extends Component {
   render() {
-    const ref = `place-${this.props.idx}`;
-    return ( <Marker ref={ref} {...this.props} optimized={false} zIndex={9999}/> );
+    let { ref, position, onClick } = this.props;
+    return ( <Marker ref={ref}
+                     position={position}
+                     onClick={onClick}
+                     optimized={false}
+                     zIndex={9999}/> );
   }
 }

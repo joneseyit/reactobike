@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, InfoWindow } from 'google-maps-react';
 import { GAPI_KEY } from '../../config';
-import { stationMapProps, stationMapStyle, stationMapContainerStyle}  from '../../google-maps/maps';
+import { stationMapProps,
+         stationMapStyle,
+         stationMapContainerStyle }  from '../../google-maps/maps';
 import { fitBounds } from '../../google-maps/utils';
 import StationMarker from './StationMarkerContainer';
 import PlaceMarker from './PlaceMarker';
@@ -33,8 +35,11 @@ class StationMap extends Component {
 
   // Zoom in on place marker on when clicked
   onPlaceMarkerClick(location) {
-    let { google, stationMap, places } = this.props;
+    let { google, stationMap, route } = this.props;
     if (this.state.zoomedIn) {
+      let places = [];
+      if (route.origin) places.push(route.origin);
+      if (route.destination) places.push(route.destination);
       fitBounds(google, stationMap, places);
       this.setState({ zoomedIn: false });
     } else {
@@ -64,7 +69,7 @@ class StationMap extends Component {
 
   // Save Google Maps objects to store for access by other components
   componentDidUpdate(prevProps) {
-    const { setStationMap, google, setGoogle, setGeocoder, places } = this.props;
+    const { setStationMap, google, setGoogle, setGeocoder, route } = this.props;
     const stationMapRef = this.refs['station-map'];
     const stationMap = stationMapRef && stationMapRef.map;
 
@@ -77,18 +82,30 @@ class StationMap extends Component {
       setGeocoder(new google.maps.Geocoder);
     }
 
-    if (stationMap && google && prevProps.places.length !== places.length) {
-      fitBounds(google, stationMap, places);
+    if (stationMap && google &&
+          (prevProps.route.originPlace !== route.originPlace ||
+           prevProps.route.destinationPlace !== route.destinationPlace) ) {
+      let places = [];
+      if (route.originPlace) places.push(route.originPlace);
+      if (route.destinationPlace) places.push(route.destinationPlace);
+      if (places.length) {
+        fitBounds(google, stationMap, places);
+      } else {
+        stationMap.setCenter(stationMapProps.initialCenter);
+        stationMap.setZoom(stationMapProps.zoom);
+      }
     }
-
   }
-
   render() {
     const { onMapClick, onStationMarkerClick, onPlaceMarkerClick, onInfoWindowClose} = this;
-    const { loaded, google, stations, places } = this.props;
+    const { loaded, google, stations, route } = this.props;
     const { selectedPlace, activeMarker, showingInfoWindow } = this.state;
+    let places = [];
+    if (route.origin) places.push(route.origin);
+    if (route.destination) places.push(route.destination);
+    console.log(route);
     if (!loaded) {
-      return (<div>Loading...</div>);
+      return (<div>Loading map...</div>);
     } else {
       return (
         <Map ref="station-map" google={google}
@@ -107,12 +124,13 @@ class StationMap extends Component {
             );
           })}
 
-          { places.map((place, idx) =>
-            <PlaceMarker key={idx}
-                    idx={idx}
-                    onClick={() => onPlaceMarkerClick(place.geometry.location)}
-                    position={place.geometry.location} />
-          )}
+          { places.map((place, idx) => (
+              <PlaceMarker key={idx}
+                           onClick={() => onPlaceMarkerClick(place.geometry.location)}
+                           position={place.geometry.location} />
+            ))
+
+          }
 
           <InfoWindow
             marker={activeMarker}

@@ -6,6 +6,7 @@ import google from './google';
 import geocoder from './geocoder';
 import mapMode from './mapMode';
 import places from './places';
+import route from './route';
 
 export default combineReducers({
   stationInfo,
@@ -14,5 +15,6 @@ export default combineReducers({
   google,
   geocoder,
   mapMode,
-  places
+  places,
+  route
 });

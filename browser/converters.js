@@ -28,7 +28,7 @@ export const joinStationData = (station, stationStatus) => {
       isReturning: null
     };
   return Object.assign({}, station, status);
-}
+};
 
 export const cropCoordinates = coordinates => ({
   lat: Math.round(coordinates.lat * 100000) / 100000,
