@@ -35,8 +35,9 @@ class StationMap extends Component {
     let { google, stationMap, route } = this.props,
     start = route.originPlace.geometry.location,
     startStation = this.getStation('origin').position,
-    endStation = this.getStation('destination'),
+    endStation = this.getStation('destination').position,
     end = route.destinationPlace.geometry.location;
+    console.log(start, startStation, endStation, end);
     calculateRoute(google, stationMap, start, startStation, 'WALKING');
     calculateRoute(google, stationMap, startStation, endStation, 'BICYCLING');
     calculateRoute(google, stationMap, endStation, end, 'WALKING');
