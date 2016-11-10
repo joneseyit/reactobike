@@ -72,16 +72,6 @@ export const renderAutoComplete = (google, stationMap, aref) => dispatch => {
     let { route } = store.getState();
     if (!route.originPlace) return dispatch(setOriginPlace(place));
     else if (!route.destinationPlace) return dispatch(setDestinationPlace(place));
-
-    // dispatch(addPlace(place));
-
-    // Autopositioning disabled due to auto-binding to places array
-    // if (place.geometry.viewport) {
-    //   stationMap.fitBounds(place.geometry.viewport);
-    // } else {
-    //   stationMap.setCenter(place.geometry.location);
-    //   stationMap.setZoom(17);
-    // }
   });
 };
 
