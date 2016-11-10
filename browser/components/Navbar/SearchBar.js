@@ -3,11 +3,19 @@ import React, { Component } from 'react';
 export default class SearchBar extends Component {
   constructor(props) {
     super(props);
+    this.state = { searchInput: ''};
+    this.onSearchChange = this.onSearchChange.bind(this);
     this.onResetClick = this.onResetClick.bind(this);
   }
+
+  onSearchChange(evt) {
+    this.setState({searchInput: evt.target.value});
+  }
+
   onResetClick() {
     this.props.resetPlaces();
   }
+
 
   componentDidUpdate(prevProps) {
     const { stationMap, google, route } = this.props;
@@ -16,6 +24,7 @@ export default class SearchBar extends Component {
         || (route.originPlace !== prevProps.route.originPlace
             || route.destinationPlace !== prevProps.route.destinationPlace)) {
       this.props.renderAutoComplete(google, stationMap, this.refs.autocomplete);
+      this.setState({searchInput: ''});
       // if (!google || !stationMap) return;
       // const node = ReactDOM.findDOMNode(this.refs.autocomplete);
       // const autocomplete = new google.maps.places.Autocomplete(node);
@@ -41,7 +50,8 @@ export default class SearchBar extends Component {
 
   render() {
     let { route } = this.props;
-    let { onResetClick } = this;
+    let { searchInput } = this.state;
+    let { onSearchChange, onResetClick } = this;
     return (
       <div>
         {route.originPlace && route.destinationPlace &&
@@ -54,6 +64,8 @@ export default class SearchBar extends Component {
                  id="autocomplete-input"
                  type="text"
                  className="form-control"
+                 onChange={onSearchChange}
+                 value={searchInput}
                  placeholder={`Enter your ${route.originPlace ? 'destination' : 'origin'}`} />
         }
       </div>

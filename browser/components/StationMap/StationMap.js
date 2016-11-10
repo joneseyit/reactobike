@@ -4,9 +4,15 @@ import { GAPI_KEY } from '../../config';
 import { stationMapProps,
          stationMapStyle,
          stationMapContainerStyle }  from '../../google-maps/maps';
-import { fitBounds } from '../../google-maps/utils';
+import { setOriginStation,
+         setDestinationStation,
+         resetStations } from '../../redux/route';
+import { fitBounds,
+         calculateRoute,
+         calcLatLngDistance } from '../../google-maps/utils';
 import StationMarker from './StationMarkerContainer';
 import PlaceMarker from './PlaceMarker';
+import store from '../../store';
 
 class StationMap extends Component {
   constructor (props) {
@@ -23,6 +29,63 @@ class StationMap extends Component {
     this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.setState = this.setState.bind(this);
+  }
+
+  renderDirections() {
+    let { google, stationMap, route } = this.props,
+    start = route.originPlace.geometry.location,
+    startStation = this.getStation('origin').position,
+    endStation = this.getStation('destination'),
+    end = route.destinationPlace.geometry.location;
+    calculateRoute(google, stationMap, start, startStation, 'WALKING');
+    calculateRoute(google, stationMap, startStation, endStation, 'BICYCLING');
+    calculateRoute(google, stationMap, endStation, end, 'WALKING');
+  }
+
+  getStation(place) {
+    let { route, stations } = this.props;
+    let location = place === 'destination' ?
+      route.destinationPlace.geometry.location :
+      route.originPlace.geometry.location;
+    let pLat = location.lat();
+    let pLng = location.lng();
+    let station;
+    stations.reduce((prev, curr) => {
+      let {lat, lng} = curr.position;
+      let dist = calcLatLngDistance(pLat, pLng, lat, lng, 'K');
+      if (!station || dist < prev) station = curr;
+      else return prev;
+      return dist;
+    });
+    return station;
+  }
+
+  getClosestStations() {
+    let { route, stations } = this.props;
+    let opLat = route.originPlace.geometry.location.lat();
+    let opLng = route.originPlace.geometry.location.lng();
+    let dpLat = route.destinationPlace.geometry.location.lat();
+    let dpLng = route.destinationPlace.geometry.location.lng();
+
+    let originStation, destinationStation;
+    stations.reduce((prev, curr) => {
+      let {lat, lng} = curr.position;
+      let dist = calcLatLngDistance(opLat, opLng, lat, lng, 'K');
+      if (!originStation || dist < prev) originStation = curr;
+      else return prev;
+      return dist;
+    });
+
+    stations.reduce((prev, curr) => {
+      let {lat, lng} = curr.position;
+      let dist = calcLatLngDistance(dpLat, dpLng, lat, lng, 'K');
+      if (!destinationStation || dist < prev) destinationStation = curr;
+      else return prev;
+      return dist;
+    });
+
+    store.dispatch(setOriginStation(originStation));
+    store.dispatch(setDestinationStation(destinationStation));
   }
 
   // Show info window when marker is clicked, displaying station data
@@ -91,6 +154,10 @@ class StationMap extends Component {
         [route.originPlace];
         this.setState({places});
         fitBounds(google, stationMap, places);
+        if (places.length === 2) {
+          // this.getClosestStations();
+          this.renderDirections();
+        }
       } else {
         this.setState({places: []});
         stationMap.setCenter(stationMapProps.initialCenter);
@@ -114,12 +181,12 @@ class StationMap extends Component {
           onClick={onMapClick}
           {...stationMapProps}>
 
-          { stations.map(stationId => {
+          { stations.map(({id}) => {
             return (
             <StationMarker
-              id={stationId}
+              id={id}
               onClick={onStationMarkerClick}
-              key={stationId}/>
+              key={id}/>
             );
           })}
 

@@ -12,6 +12,7 @@ app.use(morgan('dev'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
+app.use('/materialize', express.static(path.join(__dirname, 'node_modules', 'materialize-css', 'dist')))
 app.use('/jquery', express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')));
 
 const validFrontendRoutes = ['/', '/data', '/map'];

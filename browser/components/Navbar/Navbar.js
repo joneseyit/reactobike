@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import SearchBar from './SearchBarContainer';
-import LocationButton from './LocationButtonContainer';
 import MapModeButtons from './MapModeButtonsContainer';
 
 export default class Navbar extends Component {
@@ -43,11 +42,6 @@ export default class Navbar extends Component {
                   </div>
                 </form>
             )}
-            { location === '/map' && (
-                <div className="navbar-right">
-                    <LocationButton />
-                    <p id="navbar-or" className="navbar-right navbar-text">OR</p>
-                </div> )}
           </div>
         </div>
       </nav>
