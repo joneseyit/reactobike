@@ -33,14 +33,16 @@ class StationMap extends Component {
 
   renderDirections() {
     let { google, stationMap, route } = this.props,
-    start = route.originPlace.geometry.location,
-    startStation = this.getStation('origin').position,
-    endStation = this.getStation('destination').position,
-    end = route.destinationPlace.geometry.location;
-    console.log(start, startStation, endStation, end);
-    calculateRoute(google, stationMap, start, startStation, 'WALKING');
-    calculateRoute(google, stationMap, startStation, endStation, 'BICYCLING');
-    calculateRoute(google, stationMap, endStation, end, 'WALKING');
+        { places } = this.state,
+        { step1, step2, step3 } = this.refs,
+        start = route.originPlace.geometry.location,
+        startStation = this.getStation('origin').position,
+        endStation = this.getStation('destination').position,
+        end = route.destinationPlace.geometry.location;
+    calculateRoute(google, stationMap, start, startStation, 'WALKING', step1);
+    calculateRoute(google, stationMap, startStation, endStation, 'BICYCLING', step2);
+    calculateRoute(google, stationMap, endStation, end, 'WALKING', step3);
+    fitBounds(google, stationMap, places);
   }
 
   getStation(place) {
@@ -154,15 +156,17 @@ class StationMap extends Component {
         [route.originPlace, route.destinationPlace] :
         [route.originPlace];
         this.setState({places});
-        fitBounds(google, stationMap, places);
+        console.log('fitting bounds', places.length, stationMap.getZoom());
         if (places.length === 2) {
           // this.getClosestStations();
           this.renderDirections();
         }
+        fitBounds(google, stationMap, places);
       } else {
         this.setState({places: []});
         stationMap.setCenter(stationMapProps.initialCenter);
         stationMap.setZoom(stationMapProps.zoom);
+        console.log('zooming out', stationMap.getZoom());
       }
     }
   }
@@ -175,6 +179,8 @@ class StationMap extends Component {
       return (<div>Loading map...</div>);
     } else {
       return (
+        <div className="row">
+        <div className="col-sm-12 col-md-9">
         <Map ref="station-map" google={google}
           className="map"
           style={stationMapStyle}
@@ -225,6 +231,18 @@ class StationMap extends Component {
           </InfoWindow>
 
         </Map>
+        </div>
+        <div className="col-sm-12 col-md-3">
+          <div className="row">
+            <div ref="step1" className="col-sm-4 col-md-12">
+            </div>
+            <div ref="step2" className="col-sm-4 col-md-12">
+            </div>
+            <div ref="step3" className="col-sm-4 col-md-12">
+            </div>
+          </div>
+        </div>
+        </div>
       );
     }
   }

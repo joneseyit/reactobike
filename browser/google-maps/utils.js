@@ -19,9 +19,9 @@ export const calcLatLngDistance = (lat1, lng1, lat2, lng2, unit) => {
   return dist;
 };
 
-export const calculateRoute = (google, map, origin, destination, travelMode) => {
+export const calculateRoute = (google, map, origin, destination, travelMode, panel) => {
     let directionsService = new google.maps.DirectionsService(),
-        directionsDisplay = new google.maps.DirectionsRenderer(),
+        directionsDisplay = new google.maps.DirectionsRenderer({preserveViewport: true, panel}),
         request = {origin, destination, travelMode};
     directionsDisplay.setMap(map);
     directionsService.route(request, (result, status) => {
