@@ -14,6 +14,7 @@ export default class SearchBar extends Component {
 
   onResetClick() {
     this.props.resetPlaces();
+    this.props.removeStepsFromMap(this.props.route.steps);
   }
 
 
@@ -25,26 +26,6 @@ export default class SearchBar extends Component {
             || route.destinationPlace !== prevProps.route.destinationPlace)) {
       this.props.renderAutoComplete(google, stationMap, this.refs.autocomplete);
       this.setState({searchInput: ''});
-      // if (!google || !stationMap) return;
-      // const node = ReactDOM.findDOMNode(this.refs.autocomplete);
-      // const autocomplete = new google.maps.places.Autocomplete(node);
-      // autocomplete.bindTo('bounds', stationMap);
-
-      // autocomplete.addListener('place_changed', () => {
-      //   const place = autocomplete.getPlace();
-      //   if (!place.geometry) return;
-      //   // console.log('place', route.originPlace)
-      //   // else if (!route.originPlace) store.dispatch(setOriginPlace(place));
-      //   else if (!route.destinationPlace) store.dispatch(setDestinationPlace(place));
-
-      //   // Autopositioning disabled due to auto-binding to places array
-      //   // if (place.geometry.viewport) {
-      //   //   stationMap.fitBounds(place.geometry.viewport);
-      //   // } else {
-      //   //   stationMap.setCenter(place.geometry.location);
-      //   //   stationMap.setZoom(17);
-      //   // }
-      // })
     }
   }
 

@@ -29,4 +29,5 @@ export const calculateRoute = (google, map, origin, destination, travelMode, pan
           directionsDisplay.setDirections(result);
         }
       });
+    return directionsDisplay;
   }

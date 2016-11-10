@@ -6,7 +6,8 @@ import { stationMapProps,
          stationMapContainerStyle }  from '../../google-maps/maps';
 import { setOriginStation,
          setDestinationStation,
-         resetStations } from '../../redux/route';
+         resetStations,
+         addStep } from '../../redux/route';
 import { fitBounds,
          calculateRoute,
          calcLatLngDistance } from '../../google-maps/utils';
@@ -39,9 +40,15 @@ class StationMap extends Component {
         startStation = this.getStation('origin').position,
         endStation = this.getStation('destination').position,
         end = route.destinationPlace.geometry.location;
-    calculateRoute(google, stationMap, start, startStation, 'WALKING', step1);
-    calculateRoute(google, stationMap, startStation, endStation, 'BICYCLING', step2);
-    calculateRoute(google, stationMap, endStation, end, 'WALKING', step3);
+    store.dispatch(addStep(
+      calculateRoute(google, stationMap, start, startStation, 'WALKING', step1)
+      ));
+    store.dispatch(addStep(
+      calculateRoute(google, stationMap, startStation, endStation, 'BICYCLING', step2)
+      ));
+    store.dispatch(addStep(
+      calculateRoute(google, stationMap, endStation, end, 'WALKING', step3)
+      ));
     fitBounds(google, stationMap, places);
   }
 
@@ -60,6 +67,9 @@ class StationMap extends Component {
       else return prev;
       return dist;
     });
+    if (place === 'origin') store.dispatch(setOriginStation(station));
+    else if (place === 'destination') store.dispatch(setDestinationStation(station));
+
     return station;
   }
 
@@ -173,8 +183,9 @@ class StationMap extends Component {
 
   render() {
     const { onMapClick, onStationMarkerClick, onPlaceMarkerClick, onInfoWindowClose} = this;
-    const { loaded, google, stations } = this.props;
+    const { loaded, google, stations, route } = this.props;
     const { selectedPlace, activeMarker, showingInfoWindow, places } = this.state;
+    const { originPlace, originStation, destinationStation, destinationPlace } = route;
     if (!loaded) {
       return (<div>Loading map...</div>);
     } else {
@@ -232,13 +243,46 @@ class StationMap extends Component {
 
         </Map>
         </div>
-        <div className="col-sm-12 col-md-3">
+        <div id="directions" className="col-sm-12 col-md-3">
           <div className="row">
-            <div ref="step1" className="col-sm-4 col-md-12">
+            <div className="dir-panel col-sm-4 col-md-12">
+            <div className="dir-panel panel panel-default">
+              <div className="panel-heading">
+                Walking directions from {originPlace
+                  ? originPlace.name :
+                    'origin'} to {originStation ?
+                    `station at ${originStation.name}` :
+                    'CitiBike Station'}:
+              </div>
+              <div ref="step1" className="panel-body">
+              </div>
             </div>
-            <div ref="step2" className="col-sm-4 col-md-12">
             </div>
-            <div ref="step3" className="col-sm-4 col-md-12">
+            <div className="dir-panel col-sm-4 col-md-12">
+            <div className="dir-panel panel panel-default">
+              <div className="panel-heading">
+                Biking directions from {originStation ?
+                    `station at ${originStation.name}` :
+                    'CitiBike Station'} to {destinationStation ?
+                    `station at ${destinationStation.name}`
+                    : 'CitiBike Station'}:
+              </div>
+              <div ref="step2" className="panel-body">
+              </div>
+            </div>
+            </div>
+            <div className="dir-panel col-sm-4 col-md-12">
+            <div className="dir-panel panel panel-default">
+              <div className="panel-heading">
+                Walking directions from {destinationStation ?
+                    `station at ${destinationStation.name}` :
+                    'CitiBike Station'} to {destinationPlace
+                  ? destinationPlace.name :
+                    'destination'}:
+              </div>
+              <div ref="step3" className="panel-body">
+              </div>
+            </div>
             </div>
           </div>
         </div>

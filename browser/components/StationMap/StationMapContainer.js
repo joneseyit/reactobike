@@ -29,7 +29,7 @@ const mapStateToProps = ({ stationInfo, google, stationMap, zoomLevel, route }) 
         }
         return true;
       })
-      .map(({id, position}) => ({id, position}));
+      .map(({id, name, position}) => ({id, name, position}));
     return { stations, route, google, stationMap, zoomLevel};
 };
 
@@ -43,3 +43,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(StationMap);
+

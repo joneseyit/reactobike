@@ -16,7 +16,7 @@
 }
 
 #autocomplete-input {
-  width: 20em;
+  width: 30em;
 }
 
 #navbar-or {
@@ -25,7 +25,7 @@
 
 @media (min-width: 768px) and (max-width: 900px) {
     #autocomplete-input {
-        width: 10em;
+        width: 20em;
     }
 }
 
@@ -33,4 +33,28 @@
     #navbar-or {
         display: none;
     }
+}
+
+#directions {
+  padding-top: 10px;
+  max-height: calc(100vh - 50px);
+  overflow: scroll;
+}
+
+#directions .dir-panel {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#directions .dir-panel {
+  padding-right: 0;
+  margin-right: 10px;
+}
+
+#directions .row {
+  margin-right: 0;
+}
+
+.adp-warnbox, .adp-placemark {
+  display: none;
 }
