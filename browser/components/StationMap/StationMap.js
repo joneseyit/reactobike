@@ -27,7 +27,7 @@ class StationMap extends Component {
     };
     this.onStationMarkerClick = this.onStationMarkerClick.bind(this);
     this.onPlaceMarkerClick = this.onPlaceMarkerClick.bind(this);
-    this.onInfoWindowCLose = this.onInfoWindowClose.bind(this);
+    this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
     this.onMapClick = this.onMapClick.bind(this);
     this.setState = this.setState.bind(this);
   }

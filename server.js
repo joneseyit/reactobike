@@ -15,6 +15,9 @@ app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules', 'boots
 app.use('/materialize', express.static(path.join(__dirname, 'node_modules', 'materialize-css', 'dist')))
 app.use('/jquery', express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')));
 
+app.get('/download', (req, res, next) => {
+  res.attachment('/style.css').redirect('/');
+})
 const validFrontendRoutes = ['/', '/data', '/map'];
 const indexPath = path.join(__dirname, 'public', 'index.html');
 
