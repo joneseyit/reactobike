@@ -62,8 +62,8 @@ export const clearSteps = () => ({
 /*----------  THUNKS  ----------*/
 export const renderAutoComplete = (google, stationMap, aref) => dispatch => {
   if (!google || !stationMap) return;
-  const node = ReactDOM.findDOMNode(aref);
-  const autocomplete = new google.maps.places.Autocomplete(node);
+  // const node = ReactDOM.findDOMNode(aref);
+  const autocomplete = new google.maps.places.Autocomplete(aref);
   autocomplete.bindTo('bounds', stationMap);
 
   autocomplete.addListener('place_changed', () => {

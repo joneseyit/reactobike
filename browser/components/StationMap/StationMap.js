@@ -166,7 +166,6 @@ class StationMap extends Component {
         [route.originPlace, route.destinationPlace] :
         [route.originPlace];
         this.setState({places});
-        console.log('fitting bounds', places.length, stationMap.getZoom());
         if (places.length === 2) {
           // this.getClosestStations();
           this.renderDirections();
@@ -176,7 +175,6 @@ class StationMap extends Component {
         this.setState({places: []});
         stationMap.setCenter(stationMapProps.initialCenter);
         stationMap.setZoom(stationMapProps.zoom);
-        console.log('zooming out', stationMap.getZoom());
       }
     }
   }

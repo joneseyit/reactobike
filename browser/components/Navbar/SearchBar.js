@@ -20,12 +20,14 @@ export default class SearchBar extends Component {
 
   componentDidUpdate(prevProps) {
     const { stationMap, google, route } = this.props;
-    if (google && stationMap && (google !== prevProps.google
-        || stationMap !== prevProps.stationMap)
-        || (route.originPlace !== prevProps.route.originPlace
-            || route.destinationPlace !== prevProps.route.destinationPlace)) {
-      this.props.renderAutoComplete(google, stationMap, this.refs.autocomplete);
-      this.setState({searchInput: ''});
+    if (google && stationMap) {
+      if (google !== prevProps.google || stationMap !== prevProps.stationMap) {
+        this.props.renderAutoComplete(google, stationMap, this.refs.autocomplete);
+      }
+      if (route.originPlace !== prevProps.route.originPlace ||
+          route.destinationPlace !== prevProps.route.destinationPlace) {
+        this.setState({searchInput: ''});
+      }
     }
   }
 
